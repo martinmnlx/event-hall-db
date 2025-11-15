@@ -4,7 +4,7 @@ import com.infom.eventhall.model.User;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
+import java.awt.event.*;
 
 public class RegisterUI extends JPanel {
 
@@ -109,7 +109,13 @@ public class RegisterUI extends JPanel {
         add(card);
         add(Box.createVerticalGlue());
 
-        app.getRootPane().setDefaultButton(registerButton);
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                app.getRootPane().setDefaultButton(registerButton);
+            }
+        });
+
 
         registerButton.addActionListener(e -> handleRegistration());
     }

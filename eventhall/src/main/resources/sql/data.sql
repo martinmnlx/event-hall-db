@@ -20,7 +20,7 @@ CREATE TABLE Users (
     phone VARCHAR(20),
     password VARCHAR(255) NOT NULL,
     created_on DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+) AUTO_INCREMENT = 101;
 
 -- ===============================
 -- EVENT HALLS TABLE
@@ -32,7 +32,7 @@ CREATE TABLE Event_Halls (
     capacity INT NOT NULL,
     location VARCHAR(100),
     status ENUM('Available', 'Booked', 'Under Maintenance') DEFAULT 'Available'
-);
+) AUTO_INCREMENT = 101;
 
 -- ===============================
 -- STAFF TABLE
@@ -43,7 +43,7 @@ CREATE TABLE Staff (
     name VARCHAR(100) NOT NULL,
     role VARCHAR(50),
     phone VARCHAR(20)
-);
+) AUTO_INCREMENT = 101;
 
 -- ===============================
 -- EQUIPMENT TABLE
@@ -54,7 +54,7 @@ CREATE TABLE Equipment (
     equipment_name VARCHAR(100) NOT NULL,
     quantity_total INT NOT NULL,
     status ENUM('Available', 'In Use', 'Maintenance') DEFAULT 'Available'
-);
+) AUTO_INCREMENT = 101;
 
 -- ===============================
 -- RESERVATIONS TABLE
@@ -74,7 +74,7 @@ CREATE TABLE Reservations (
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (hall_id) REFERENCES Event_Halls(hall_id),
     FOREIGN KEY (staff_id) REFERENCES Staff(staff_id)
-);
+) AUTO_INCREMENT = 101;
 
 -- ===============================
 -- EQUIPMENT ALLOCATIONS TABLE
@@ -89,7 +89,7 @@ CREATE TABLE Equipment_Allocations (
         ON DELETE CASCADE,
     FOREIGN KEY (equipment_id) REFERENCES Equipment(equipment_id)
         ON DELETE CASCADE
-);
+) AUTO_INCREMENT = 101;
 
 -- ===============================
 -- SAMPLE DATA INSERTION 
@@ -103,8 +103,14 @@ VALUES
 
 INSERT INTO Event_Halls (hall_name, capacity, location, status)
 VALUES
-('Emerald Hall', 200, '2nd Floor, Building A', 'Available'),
-('Ruby Hall', 100, '3rd Floor, Building B', 'Available');
+('Azure Grand Hall', 250, 'Pasig City', 'Available'),
+('Crystal Event Center', 300, 'Taguig City', 'Available'),
+('Emerald Function Hall', 100, 'Mandaluyong City', 'Under Maintenance'),
+('Golden Gate Hall', 180, 'Manila', 'Available'),
+('Grand Vista Hall', 200, 'Makati City', 'Available'),
+('Royal Orchid Hall', 200, 'Davao City', 'Available'),
+('Sapphire Banquet Hall', 220, 'Cebu City', 'Under Maintenance'),
+('Sunshine Ballroom', 150, 'Quezon City', 'Available');
 
 INSERT INTO Equipment (equipment_name, quantity_total)
 VALUES

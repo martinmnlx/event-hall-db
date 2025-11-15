@@ -21,7 +21,7 @@ public class TestDBQuery {
             Statement stmt = conn.createStatement();
 
             // Execute a query
-            String sql = "SELECT user_id, name, email FROM Users";
+            String sql = "SELECT user_id, name, email, phone, created_on FROM Users";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Print the results
@@ -29,8 +29,10 @@ public class TestDBQuery {
                 int id = rs.getInt("user_id");
                 String name = rs.getString("name");
                 String email = rs.getString("email");
+                String phone = rs.getString("phone");
+                Timestamp createdOn = rs.getTimestamp("created_on");
 
-                System.out.println("ID: " + id + ", Name: " + name + ", Email: " + email);
+                System.out.println("ID: " + id + ", Name: " + name + ", Email: " + email + ", Phone: " + phone + ", Created On: " + createdOn);
             }
 
             // Close resources
