@@ -1,6 +1,7 @@
 package com.infom.eventhall.ui;
 
 import com.infom.eventhall.model.User;
+import com.infom.eventhall.service.UserService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.awt.event.*;
 public class RegisterUI extends JPanel {
 
     private final AppFrame app;
+    private final UserService userService;
 
     private final JLabel titleLabel;
     private final JLabel nameLabel;
@@ -22,8 +24,9 @@ public class RegisterUI extends JPanel {
     private final JButton registerButton;
     private JLabel warningLabel = new JLabel("Warning");
 
-    public RegisterUI(AppFrame app) {
+    public RegisterUI(AppFrame app, UserService userService) {
         this.app = app;
+        this.userService = userService;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -116,27 +119,23 @@ public class RegisterUI extends JPanel {
             }
         });
 
-
         registerButton.addActionListener(e -> handleRegistration());
     }
 
 
     private void handleRegistration() {
-        if (nameField.getText().isEmpty() || emailField.getText().isEmpty() || phoneField.getText().isEmpty() || new String(passwordField.getPassword()).isEmpty()) {
+        String name = nameField.getText();
+        String email = emailField.getText();
+        String phone = phoneField.getText();
+        String password = new String(passwordField.getPassword());
+
+        if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
             warningLabel.setText("Fields cannot be left blank!");
         } else {
             if (app.getDb().getUserDAO().getUserByEmail(emailField.getText()) != null) {
                 warningLabel.setText("Email already in use!");
             } else {
-                User user = new User();
-                user.setType(User.UserType.valueOf("Customer"));
-                user.setName(nameField.getText());
-                user.setEmail(emailField.getText());
-                user.setPhoneNumber(phoneField.getText());
-                user.setPassword(new String(passwordField.getPassword()));
-
-                app.getDb().getUserDAO().createUser(user);
-
+                userService.registerUser(name, email, phone, password);
                 app.showScreen("login");
             }
         }

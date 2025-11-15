@@ -12,9 +12,8 @@ public class StaffService {
 
     private StaffDAO staffDAO;
 
-    public StaffService() {
-        Connection connection = DatabaseManager.getConnection();
-        this.staffDAO = new StaffDAO(connection);
+    public StaffService(DatabaseManager db) {
+        //this.staffDAO = db.getStaffDAO();
     }
 
     public List<Staff> getAllStaff() {

@@ -9,6 +9,7 @@ import java.io.*;
 import com.infom.eventhall.DatabaseManager;
 import com.infom.eventhall.model.User;
 
+import com.infom.eventhall.service.UserService;
 import lombok.Data;
 
 @Data
@@ -23,6 +24,8 @@ public class AppFrame extends JFrame {
     private final JPanel mainPanel;
     private Font thinFont, regularFont, boldFont;
 
+    private final UserService userService;
+
     private final LoginUI loginUI;
     private final RegisterUI registerUI;
     private final DashboardUI dashboardUI;
@@ -30,6 +33,8 @@ public class AppFrame extends JFrame {
 
     public AppFrame() {
         db = new DatabaseManager();
+
+        userService = new UserService(db);
 
         loadFonts();
 
@@ -42,8 +47,8 @@ public class AppFrame extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        mainPanel.add(loginUI = new LoginUI(this), "login");
-        mainPanel.add(registerUI = new RegisterUI(this), "register");
+        mainPanel.add(loginUI = new LoginUI(this, userService), "login");
+        mainPanel.add(registerUI = new RegisterUI(this, userService), "register");
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
         mainPanel.add(hallsUI = new HallsUI(this), "halls");
 
@@ -51,7 +56,7 @@ public class AppFrame extends JFrame {
 
         setVisible(true);
 
-        showScreen("halls");
+        showScreen("login");
     }
 
     public void showScreen(String name) {

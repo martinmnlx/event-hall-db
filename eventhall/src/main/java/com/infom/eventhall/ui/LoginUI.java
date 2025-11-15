@@ -1,6 +1,7 @@
 package com.infom.eventhall.ui;
 
 import com.infom.eventhall.model.User;
+import com.infom.eventhall.service.UserService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.util.Objects;
 public class LoginUI extends JPanel {
 
     private final AppFrame app;
+    private final UserService userService;
 
     private final JLabel titleLabel;
     private final JLabel emailLabel;
@@ -19,8 +21,9 @@ public class LoginUI extends JPanel {
     private final JButton registerButton;
     private JLabel warningLabel;
 
-    public LoginUI(AppFrame app) {
+    public LoginUI(AppFrame app, UserService userService) {
         this.app = app;
+        this.userService = userService;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 

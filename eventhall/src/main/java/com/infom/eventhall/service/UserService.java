@@ -12,9 +12,8 @@ public class UserService {
 
     private UserDAO userDAO;
 
-    public UserService() {
-        Connection connection = DatabaseManager.getConnection();
-        this.userDAO = new UserDAO(connection);
+    public UserService(DatabaseManager db) {
+        this.userDAO = db.getUserDAO();
     }
 
     public boolean registerUser(String name, String email, String phone, String password) {

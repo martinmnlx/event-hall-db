@@ -11,9 +11,8 @@ public class EquipmentService {
 
     private EquipmentDAO equipmentDAO;
 
-    public EquipmentService() {
-        Connection connection = DatabaseManager.getConnection();
-        this.equipmentDAO = new EquipmentDAO(connection);
+    public EquipmentService(DatabaseManager db) {
+        //this.equipmentDAO = db.getEquipmentDAO();
     }
 
     public List<Equipment> getAllEquipments() {
