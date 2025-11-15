@@ -3,6 +3,8 @@
 -- Members: Ancheta, Bongco, Macatangay, Manalo
 -- Date: November 2025
 
+DROP DATABASE IF EXISTS event_hall_reservation;
+
 CREATE DATABASE event_hall_reservation;
 USE event_hall_reservation;
 
@@ -16,7 +18,7 @@ CREATE TABLE Users (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     phone VARCHAR(20),
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     created_on DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -63,7 +65,7 @@ CREATE TABLE Reservations (
     user_id INT NOT NULL,
     hall_id INT NOT NULL,
     staff_id INT NOT NULL,
-    created_on DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_on DATETIME DEFAULT CURRENT_TIMESTAMP,
     starts_on DATETIME NOT NULL,
     ends_on DATETIME NOT NULL,
     event_type VARCHAR(100),
@@ -94,10 +96,10 @@ CREATE TABLE Equipment_Allocations (
 -- Can be updated and manipulates as project develops
 -- ===============================
 
-INSERT INTO Users (type, name, email, phone, password_hash)
+INSERT INTO Users (type, name, email, phone, password)
 VALUES
-('Admin', 'admin', 'admin@email.com', '09981234567', 'hashed_password'),
-('Customer', 'Juan Dela Cruz', 'juan@email.com', '09171234567', 'hashed_password');
+('Admin', 'admin', 'admin@email.com', '09981234567', 'password'),
+('Customer', 'Juan Dela Cruz', 'juan@email.com', '09171234567', 'password');
 
 INSERT INTO Event_Halls (hall_name, capacity, location, status)
 VALUES

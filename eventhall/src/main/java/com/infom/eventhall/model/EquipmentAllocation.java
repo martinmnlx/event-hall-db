@@ -1,4 +1,4 @@
-package com.sam.eventhallproject.model;
+package com.infom.eventhall.model;
 
 import lombok.Data;
 

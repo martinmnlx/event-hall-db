@@ -1,17 +1,36 @@
 package com.infom.eventhall;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import javax.swing.*;
+import java.awt.*;
+
+import com.infom.eventhall.ui.*;
+
 public class Main {
     static void main() {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        IO.println(String.format("Hello and welcome!"));
+        // Create JFrame
+        JFrame frame = new JFrame("Event Hall Reservation");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            IO.println("i = " + i);
-        }
+        // Create main panel with CardLayout
+        CardLayout cardLayout = new CardLayout();
+        JPanel mainPanel = new JPanel(cardLayout);
+
+        // Create UI panels
+        LoginUI loginPanel = new LoginUI(cardLayout, mainPanel);
+        JPanel dashboardPanel = new JPanel();
+        dashboardPanel.add(new JLabel("Welcome to Dashboard"));
+
+        // Add panels to CardLayout
+        mainPanel.add(loginPanel, "login");
+        mainPanel.add(dashboardPanel, "dashboard");
+
+        // Show login first
+        cardLayout.show(mainPanel, "login");
+
+        // Add mainPanel to frame and display
+        frame.add(mainPanel);
+        frame.setLocationRelativeTo(null); // center on screen
+        frame.setVisible(true);
     }
 }
