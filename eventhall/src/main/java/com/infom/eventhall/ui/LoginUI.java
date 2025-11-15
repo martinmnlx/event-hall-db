@@ -1,48 +1,104 @@
 package com.infom.eventhall.ui;
 
 
+import com.infom.eventhall.dao.UserDAO;
+import com.infom.eventhall.model.User;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class LoginUI extends JPanel {
-    private JTextField emailField;
-    private JPasswordField passwordField;
-    private JButton loginButton;
 
-    private CardLayout cardLayout;
-    private JPanel mainPanel;
+    private final AppFrame app;
+    private final UserDAO dao;
 
-    public LoginUI(CardLayout cardLayout, JPanel mainPanel) {
-        this.cardLayout = cardLayout;
-        this.mainPanel = mainPanel;
+    private final JLabel emailLabel;
+    private final JLabel passwordLabel;
+    private final JTextField emailField;
+    private final JPasswordField passwordField;
+    private final JButton loginButton;
+    private JLabel warningLabel = new JLabel("Warning");
 
-        emailField = new JTextField(20);
-        passwordField = new JPasswordField(20);
-        loginButton = new JButton("Login");
+    public LoginUI(AppFrame app, UserDAO dao) {
+        this.app = app;
+        this.dao = dao;
 
-        add(new JLabel("Email:"));
-        add(emailField);
-        add(new JLabel("Password:"));
-        add(passwordField);
-        add(loginButton);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        // loginButton.addActionListener(e -> handleLogin());
+        JPanel card = new JPanel();
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY, 1),
+                BorderFactory.createEmptyBorder(20, 20, 20, 20)
+        ));
+        card.setMaximumSize(new Dimension(400, 600));
+        card.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        emailLabel = app.createLabel("Email", Color.BLACK, 20f, 2);
+        emailLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        passwordLabel = app.createLabel("Password", Color.BLACK, 20f, 2);
+        passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        warningLabel = app.createLabel(" ", Color.RED, 16f, 2);
+        warningLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        emailField = new JTextField();
+        emailField.setMaximumSize(new Dimension(300, 30));
+        emailField.setMargin(new Insets(8, 4, 8, 4));
+        emailField.setFont(app.getRegularFont().deriveFont(16f));
+        emailField.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        passwordField = new JPasswordField();
+        passwordField.setMaximumSize(new Dimension(300, 30));
+        passwordField.setMargin(new Insets(8, 2, 8, 2));
+        passwordField.setFont(app.getRegularFont().deriveFont(16f));
+        passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        loginButton = app.createButton("Login");
+        loginButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        card.add(Box.createVerticalGlue());
+        card.add(emailLabel);
+        card.add(Box.createVerticalStrut(10));
+        card.add(emailField);
+        card.add(Box.createVerticalStrut(10));
+        card.add(passwordLabel);
+        card.add(Box.createVerticalStrut(10));
+        card.add(passwordField);
+        card.add(Box.createVerticalStrut(20));
+        card.add(warningLabel);
+        card.add(Box.createVerticalStrut(20));
+        card.add(loginButton);
+        card.add(Box.createVerticalGlue());
+
+        add(Box.createVerticalGlue());
+        add(card);
+        add(Box.createVerticalGlue());
+
+        loginButton.addActionListener(e -> handleLogin());
     }
 
-    /*
+
     private void handleLogin() {
-        String email = emailField.getText();
-        String password = new String(passwordField.getPassword());
+        if (emailField.getText() == null) {
+            warningLabel.setText("Email cannot be left blank!");
+        }
 
-        User user = UserDAO.checkUser(email, password); // DAO does the DB check
-
+        User user = dao.getUserByEmail(emailField.getText());
         if (user != null) {
-            // switch to dashboard panel
-            cardLayout.show(mainPanel, "dashboard");
+            System.out.println("User with email exists!");
+
+            if (Objects.equals(new String(passwordField.getPassword()), user.getPassword())) {
+                System.out.println("Login successful!");
+            } else {
+                System.out.println("Incorrect password!");
+            }
         } else {
-            JOptionPane.showMessageDialog(this, "Invalid login");
+            System.out.println("User with email doesn't exist!");
+            warningLabel.setText("User with email " + emailField.getText() + " doesn't exist!");
         }
     }
-    */
 }
 
