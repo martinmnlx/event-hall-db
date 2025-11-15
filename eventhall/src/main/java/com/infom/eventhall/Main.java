@@ -13,11 +13,10 @@ public class Main {
         Connection connection = DatabaseManager.getConnection();
 
         UserDAO userDAO = new UserDAO(connection);
-
-
+        DashboardDAO dashboardDAO = new DashboardDAO(connection);
 
         SwingUtilities.invokeLater(() -> {
-            AppFrame app = new AppFrame(userDAO);
+            AppFrame app = new AppFrame(userDAO, dashboardDAO);
             app.setVisible(true);
         });
     }

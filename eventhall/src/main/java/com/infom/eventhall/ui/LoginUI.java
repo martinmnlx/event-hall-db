@@ -1,6 +1,5 @@
 package com.infom.eventhall.ui;
 
-
 import com.infom.eventhall.dao.UserDAO;
 import com.infom.eventhall.model.User;
 
@@ -13,6 +12,7 @@ public class LoginUI extends JPanel {
     private final AppFrame app;
     private final UserDAO dao;
 
+    private final JLabel titleLabel;
     private final JLabel emailLabel;
     private final JLabel passwordLabel;
     private final JTextField emailField;
@@ -32,8 +32,11 @@ public class LoginUI extends JPanel {
                 BorderFactory.createLineBorder(Color.GRAY, 1),
                 BorderFactory.createEmptyBorder(20, 20, 20, 20)
         ));
-        card.setMaximumSize(new Dimension(400, 600));
+        card.setMaximumSize(new Dimension(350, 600));
         card.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        titleLabel = app.createLabel("EventBuddy", Color.BLUE, 60f, 3);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         emailLabel = app.createLabel("Email", Color.BLACK, 20f, 2);
         emailLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -52,20 +55,20 @@ public class LoginUI extends JPanel {
 
         passwordField = new JPasswordField();
         passwordField.setMaximumSize(new Dimension(300, 30));
-        passwordField.setMargin(new Insets(8, 2, 8, 2));
+        passwordField.setMargin(new Insets(8, 4, 8, 4));
         passwordField.setFont(app.getRegularFont().deriveFont(16f));
         passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        loginButton = app.createButton("Login");
+        loginButton = app.createButton("Login", 20f);
         loginButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         card.add(Box.createVerticalGlue());
         card.add(emailLabel);
-        card.add(Box.createVerticalStrut(10));
+        card.add(Box.createVerticalStrut(8));
         card.add(emailField);
-        card.add(Box.createVerticalStrut(10));
+        card.add(Box.createVerticalStrut(12));
         card.add(passwordLabel);
-        card.add(Box.createVerticalStrut(10));
+        card.add(Box.createVerticalStrut(8));
         card.add(passwordField);
         card.add(Box.createVerticalStrut(20));
         card.add(warningLabel);
@@ -74,6 +77,8 @@ public class LoginUI extends JPanel {
         card.add(Box.createVerticalGlue());
 
         add(Box.createVerticalGlue());
+        add(titleLabel);
+        add(Box.createVerticalStrut(60));
         add(card);
         add(Box.createVerticalGlue());
 
@@ -82,22 +87,25 @@ public class LoginUI extends JPanel {
 
 
     private void handleLogin() {
-        if (emailField.getText() == null) {
+        if (emailField.getText().isEmpty()) {
             warningLabel.setText("Email cannot be left blank!");
-        }
-
-        User user = dao.getUserByEmail(emailField.getText());
-        if (user != null) {
-            System.out.println("User with email exists!");
-
-            if (Objects.equals(new String(passwordField.getPassword()), user.getPassword())) {
-                System.out.println("Login successful!");
-            } else {
-                System.out.println("Incorrect password!");
-            }
         } else {
-            System.out.println("User with email doesn't exist!");
-            warningLabel.setText("User with email " + emailField.getText() + " doesn't exist!");
+            User user = dao.getUserByEmail(emailField.getText());
+            if (user != null) {
+                System.out.println("User with email exists!");
+
+                if (Objects.equals(new String(passwordField.getPassword()), user.getPassword())) {
+                    System.out.println("Login successful!");
+                    warningLabel.setText("Login successful!");
+                    app.showScreen("dashboard");
+                } else {
+                    System.out.println("Incorrect password!");
+                    warningLabel.setText("Incorrect password!");
+                }
+            } else {
+                System.out.println("User with email doesn't exist!");
+                warningLabel.setText("User with email " + emailField.getText() + " doesn't exist!");
+            }
         }
     }
 }

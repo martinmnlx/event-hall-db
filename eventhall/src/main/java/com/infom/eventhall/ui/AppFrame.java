@@ -15,12 +15,15 @@ import lombok.Data;
 public class AppFrame extends JFrame {
 
     private final UserDAO userDAO;
+    private final DashboardDAO dashboardDAO;
+
     private final CardLayout cardLayout;
     private final JPanel mainPanel;
     private Font thinFont, regularFont, boldFont;
 
-    public AppFrame(UserDAO userDAO) {
+    public AppFrame(UserDAO userDAO, DashboardDAO dashboardDAO) {
         this.userDAO = userDAO;
+        this.dashboardDAO = dashboardDAO;
 
         loadFonts();
 
@@ -28,11 +31,13 @@ public class AppFrame extends JFrame {
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
         mainPanel.add(new LoginUI(this, userDAO), "login");
+        mainPanel.add(new DashboardUI(this, dashboardDAO), "dashboard");
 
         add(mainPanel);
 
@@ -70,10 +75,10 @@ public class AppFrame extends JFrame {
         return t;
     }
 
-    public JButton createButton(String text) {
+    public JButton createButton(String text, float size) {
         JButton b = new JButton(text);
 
-        b.setFont(getRegularFont().deriveFont(24f));
+        b.setFont(getRegularFont().deriveFont(size));
         b.setFocusPainted(false);
         b.setContentAreaFilled(true);
         b.setOpaque(true);
