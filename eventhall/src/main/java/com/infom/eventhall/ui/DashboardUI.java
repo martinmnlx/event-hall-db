@@ -61,6 +61,8 @@ public class DashboardUI extends JPanel {
         add(Box.createVerticalStrut(20));
         add(profileButton);
         add(Box.createVerticalGlue());
+
+        hallsButton.addActionListener(e -> app.showScreen("halls"));
     }
 
     public void refresh() {

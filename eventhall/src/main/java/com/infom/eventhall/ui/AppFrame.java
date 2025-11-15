@@ -26,6 +26,7 @@ public class AppFrame extends JFrame {
     private final LoginUI loginUI;
     private final RegisterUI registerUI;
     private final DashboardUI dashboardUI;
+    private final HallsUI hallsUI;
 
     public AppFrame() {
         db = new DatabaseManager();
@@ -44,12 +45,13 @@ public class AppFrame extends JFrame {
         mainPanel.add(loginUI = new LoginUI(this), "login");
         mainPanel.add(registerUI = new RegisterUI(this), "register");
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
+        mainPanel.add(hallsUI = new HallsUI(this), "halls");
 
         add(mainPanel);
 
         setVisible(true);
 
-        showScreen("login");
+        showScreen("halls");
     }
 
     public void showScreen(String name) {

@@ -16,6 +16,6 @@ public class User {
     private LocalDateTime createdOn;
 
     public enum UserType {
-        Customer, Admin, Staff
+        Customer, Admin
     }
 }

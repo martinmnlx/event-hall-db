@@ -13,7 +13,7 @@ public class EventHall {
     private HallStatus status; // either gives a value of Available, Booked, UnderMaintenance
 
     public enum HallStatus{
-        Available, Booked, UnderMaintenance
+        Available, Maintenance
     }
 
 }

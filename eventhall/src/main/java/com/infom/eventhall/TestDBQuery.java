@@ -35,6 +35,20 @@ public class TestDBQuery {
                 System.out.println("ID: " + id + ", Name: " + name + ", Email: " + email + ", Phone: " + phone + ", Created On: " + createdOn);
             }
 
+            // Execute a query
+            sql = "SELECT * FROM Event_Halls";
+            rs = stmt.executeQuery(sql);
+
+            // Print the results
+            while (rs.next()) {
+                int id = rs.getInt("hall_id");
+                String name = rs.getString("hall_name");
+                int capacity = rs.getInt("capacity");
+                String location = rs.getString("location");
+
+                System.out.println("ID: " + id + ", Name: " + name + ", Capacity: " + capacity + ", Location: " + location);
+            }
+
             // Close resources
             rs.close();
             stmt.close();
