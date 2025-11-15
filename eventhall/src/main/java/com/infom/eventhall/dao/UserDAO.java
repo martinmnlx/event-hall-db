@@ -4,6 +4,7 @@ import com.infom.eventhall.model.User;
 import com.infom.eventhall.DatabaseManager;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class UserDAO {
             stmt.setString(3, user.getEmail());
             stmt.setString(4, user.getPhoneNumber());
             stmt.setString(5, user.getPassword());
-            stmt.setTimestamp(6, java.sql.Timestamp.valueOf(user.getCreatedOn()));
+            stmt.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -122,7 +123,7 @@ public class UserDAO {
     private User mapRowToUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("user_id"));
-        user.setType(User.UserType.valueOf("type"));
+        user.setType(User.UserType.valueOf(rs.getString("type")));
         user.setName(rs.getString("name"));
         user.setEmail(rs.getString("email"));
         user.setPhoneNumber(rs.getString("phone"));

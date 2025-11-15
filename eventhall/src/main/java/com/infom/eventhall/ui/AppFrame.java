@@ -6,7 +6,8 @@ import java.awt.event.*;
 import java.sql.*;
 import java.io.*;
 
-import com.infom.eventhall.dao.*;
+import com.infom.eventhall.DatabaseManager;
+import com.infom.eventhall.model.User;
 
 import lombok.Data;
 
@@ -14,16 +15,20 @@ import lombok.Data;
 
 public class AppFrame extends JFrame {
 
-    private final UserDAO userDAO;
-    private final DashboardDAO dashboardDAO;
+    private User user;
+
+    private final DatabaseManager db;
 
     private final CardLayout cardLayout;
     private final JPanel mainPanel;
     private Font thinFont, regularFont, boldFont;
 
-    public AppFrame(UserDAO userDAO, DashboardDAO dashboardDAO) {
-        this.userDAO = userDAO;
-        this.dashboardDAO = dashboardDAO;
+    private final LoginUI loginUI;
+    private final RegisterUI registerUI;
+    private final DashboardUI dashboardUI;
+
+    public AppFrame() {
+        db = new DatabaseManager();
 
         loadFonts();
 
@@ -36,17 +41,25 @@ public class AppFrame extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        mainPanel.add(new LoginUI(this, userDAO), "login");
-        mainPanel.add(new DashboardUI(this, dashboardDAO), "dashboard");
+        mainPanel.add(loginUI = new LoginUI(this), "login");
+        mainPanel.add(registerUI = new RegisterUI(this), "register");
+        mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
 
         add(mainPanel);
+
+        setVisible(true);
 
         showScreen("login");
     }
 
     public void showScreen(String name) {
         cardLayout.show(mainPanel, name);
-        System.out.println("Panel changed!");
+
+        switch (name) {
+            case "dashboard" -> dashboardUI.refresh();
+        }
+
+        System.out.println("Panel changed: " + name);
     }
 
     private void loadFonts() {

@@ -21,7 +21,7 @@ public class EquipmentDAO {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, equipment.getEquipmentName());
             stmt.setInt(2, equipment.getQuantityTotal());
-            stmt.setString(3, equipment.getStatus().name());
+            stmt.setString(3, equipment.getEquipment().name());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -72,7 +72,7 @@ public class EquipmentDAO {
 
             stmt.setString(1, equipment.getEquipmentName());
             stmt.setInt(2, equipment.getQuantityTotal());
-            stmt.setString(3, equipment.getStatus().name());
+            stmt.setString(3, equipment.getEquipment().name());
             stmt.setInt(4, equipment.getEquipmentId());
 
             int rowsAffected = stmt.executeUpdate();
@@ -104,7 +104,7 @@ public class EquipmentDAO {
         equipment.setEquipmentId(rs.getInt("equipment_id"));
         equipment.setEquipmentName(rs.getString("equipment_name"));
         equipment.setQuantityTotal(rs.getInt("quantity_total"));
-        equipment.setStatus(Equipment.EquipmentStatus.valueOf(rs.getString("status")));
+        equipment.setEquipment(Equipment.EquipmentStatus.valueOf(rs.getString("status")));
         return equipment;
     }
 }

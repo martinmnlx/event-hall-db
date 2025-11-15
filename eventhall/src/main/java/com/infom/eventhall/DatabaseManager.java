@@ -1,25 +1,40 @@
 package com.infom.eventhall;
 
+import com.infom.eventhall.dao.*;
+
 import java.sql.*;
+
+import lombok.Data;
+
+@Data
 
 public class DatabaseManager {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/event_hall_reservation";
-    private static final String USER = "root";
-    private static final String PASSWORD = "REPOgoodVALOnoob48$$";
-
     private static Connection connection;
 
-    public static Connection getConnection() {
-        if (connection == null) {
-            try {
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("Database connected!");
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Failed to connect to database.");
-            }
+    private UserDAO userDAO;
+    private DashboardDAO dashboardDAO;
+
+    public DatabaseManager() {
+        connectToDatabase();
+        initializeDAOs();
+    }
+
+    public void connectToDatabase() {
+        try {
+            String url = "jdbc:mysql://localhost:3306/event_hall_reservation";
+            String username = "root";
+            String password = "REPOgoodVALOnoob48$$";
+            connection = DriverManager.getConnection(url, username, password);
+            System.out.println("Database connected!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to connect to database.");
         }
-        return connection;
+    }
+
+    private void initializeDAOs() {
+        userDAO = new UserDAO(connection);
+        dashboardDAO = new DashboardDAO(connection);
     }
 }
