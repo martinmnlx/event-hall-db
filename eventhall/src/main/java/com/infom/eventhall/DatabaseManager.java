@@ -15,6 +15,7 @@ public class DatabaseManager {
     private UserDAO userDAO;
     private DashboardDAO dashboardDAO;
     private EventHallDAO eventHallDAO;
+    private ReservationDAO reservationDAO;
 
     public DatabaseManager() {
         connectToDatabase();
@@ -38,5 +39,6 @@ public class DatabaseManager {
         userDAO = new UserDAO(connection);
         dashboardDAO = new DashboardDAO(connection);
         eventHallDAO = new EventHallDAO(connection);
+        reservationDAO = new ReservationDAO(connection);
     }
 }
