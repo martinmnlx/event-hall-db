@@ -58,7 +58,7 @@ public class AppFrame extends JFrame {
 
         setVisible(true);
 
-        showScreen("halls");
+        showScreen("dashboard");
     }
 
     public void showScreen(String name) {
@@ -98,15 +98,21 @@ public class AppFrame extends JFrame {
         return t;
     }
 
-    public JButton createButton(String text, float size) {
+    public JButton createButton(String text, Color color, float size, boolean fixed) {
         JButton b = new JButton(text);
 
         b.setFont(getRegularFont().deriveFont(size));
+        if (fixed) {
+            b.setMaximumSize(new Dimension(316, 40));
+            b.setPreferredSize(new Dimension(316, 40));
+            b.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        }
         b.setFocusPainted(false);
         b.setContentAreaFilled(true);
         b.setOpaque(true);
-        b.setBackground(Color.BLUE);
+        b.setBackground(color);
         b.setForeground(Color.WHITE);
+        b.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         b.addMouseListener(new MouseAdapter() {
             @Override
@@ -121,6 +127,28 @@ public class AppFrame extends JFrame {
         });
 
         return b;
+    }
+
+    public JTextField createTextField() {
+        JTextField tf = new JTextField();
+
+        tf.setPreferredSize(new Dimension(300, 40));
+        tf.setMargin(new Insets(8, 8, 8, 8));
+        tf.setFont(getRegularFont().deriveFont(16f));
+        tf.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        return tf;
+    }
+
+    public JPasswordField createPasswordField() {
+        JPasswordField pf = new JPasswordField();
+
+        pf.setPreferredSize(new Dimension(300, 40));
+        pf.setMargin(new Insets(8, 8, 8, 8));
+        pf.setFont(getRegularFont().deriveFont(16f));
+        pf.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        return pf;
     }
 
 }

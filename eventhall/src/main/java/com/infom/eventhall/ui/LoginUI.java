@@ -1,11 +1,9 @@
 package com.infom.eventhall.ui;
 
-import com.infom.eventhall.model.User;
 import com.infom.eventhall.service.UserService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class LoginUI extends JPanel {
 
@@ -48,36 +46,18 @@ public class LoginUI extends JPanel {
         warningLabel = app.createLabel(" ", Color.RED, 16f, 2);
         warningLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        emailField = new JTextField();
-        emailField.setMaximumSize(new Dimension(300, 30));
-        emailField.setMargin(new Insets(8, 8, 8, 8));
-        emailField.setFont(app.getRegularFont().deriveFont(16f));
-        emailField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        emailField = app.createTextField();
 
-        passwordField = new JPasswordField();
-        passwordField.setMaximumSize(new Dimension(300, 30));
-        passwordField.setMargin(new Insets(8, 8, 8, 8));
-        passwordField.setFont(app.getRegularFont().deriveFont(16f));
-        passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        passwordField = app.createPasswordField();
 
-        JPanel bottom = new JPanel();
-        bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
+        loginButton = app.createButton("Login", Color.BLUE, 20f, true);
 
-        loginButton = app.createButton("Login", 20f);
-        loginButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        registerButton = app.createButton("Create Account", 16f);
+        registerButton = app.createButton("Sign Up", Color.WHITE, 20f, true);
         registerButton.setForeground(Color.BLUE);
-        registerButton.setBorderPainted(false);
-        registerButton.setContentAreaFilled(false);
-        registerButton.setFocusPainted(false);
-        registerButton.setOpaque(false);
-        registerButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-        bottom.add(loginButton);
-        bottom.add(Box.createHorizontalStrut(4));
-        bottom.add(registerButton);
-        bottom.setAlignmentX(Component.LEFT_ALIGNMENT);
+        registerButton.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.BLUE, 1),
+                BorderFactory.createEmptyBorder(8, 8, 8, 8)
+        ));
 
         card.add(Box.createVerticalGlue());
         card.add(emailLabel);
@@ -90,7 +70,9 @@ public class LoginUI extends JPanel {
         card.add(Box.createVerticalStrut(20));
         card.add(warningLabel);
         card.add(Box.createVerticalStrut(20));
-        card.add(bottom);
+        card.add(loginButton);
+        card.add(Box.createVerticalStrut(16));
+        card.add(registerButton);
         card.add(Box.createVerticalGlue());
 
         add(Box.createVerticalGlue());
@@ -105,30 +87,33 @@ public class LoginUI extends JPanel {
         registerButton.addActionListener(e -> app.showScreen("register"));
     }
 
-
     private void handleLogin() {
+        String email = emailField.getText();
+        String password = new String(passwordField.getPassword());
+
         if (emailField.getText().isEmpty()) {
             warningLabel.setText("Email cannot be left blank!");
-        } else {
-            User user = app.getDb().getUserDAO().getUserByEmail(emailField.getText());
-            if (user != null) {
-                System.out.println("User with email exists!");
-
-                if (Objects.equals(new String(passwordField.getPassword()), user.getPassword())) {
-                    System.out.println("Login successful!");
-                    warningLabel.setText("Login successful!");
-                    app.setUser(user);
-                    System.out.println("Username: " + app.getUser().getName());
-                    app.showScreen("dashboard");
-                } else {
-                    System.out.println("Incorrect password!");
-                    warningLabel.setText("Incorrect password!");
-                }
-            } else {
-                System.out.println("User with email doesn't exist!");
-                warningLabel.setText("User with email " + emailField.getText() + " doesn't exist!");
-            }
+            return;
         }
+
+        if (userService.getUserByEmail(email) == null) {
+            warningLabel.setText("User with email " + email + " doesn't exist!");
+            return;
+        }
+
+        if (userService.authenticateUser(email, password) == null) {
+            warningLabel.setText("Incorrect password!");
+            return;
+        }
+
+        warningLabel.setText("Login successful!");
+        app.setUser(userService.authenticateUser(email, password));
+        System.out.println("Username: " + app.getUser().getName());
+        app.showScreen("dashboard");
+    }
+
+    public JLabel getWarningLabel() {
+        return warningLabel;
     }
 }
 

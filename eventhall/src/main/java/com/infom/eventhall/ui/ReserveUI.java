@@ -160,11 +160,10 @@ public class ReserveUI extends JPanel {
 
         equipmentPanel.add(checkBoxPanel);
 
-        confirmButton = app.createButton("Confirm Booking", 20f);
+        confirmButton = app.createButton("Confirm Booking", Color.BLUE, 20f, true);
         confirmButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        cancelButton = app.createButton("Cancel", 20f);
-        cancelButton.setBackground(Color.decode("#F94449"));
+        cancelButton = app.createButton("Cancel", Color.decode("#F94449"), 20f, true);
         cancelButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel buttonPanel = new JPanel();

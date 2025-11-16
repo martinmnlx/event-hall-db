@@ -22,7 +22,8 @@ public class RegisterUI extends JPanel {
     private final JTextField phoneField;
     private final JPasswordField passwordField;
     private final JButton registerButton;
-    private JLabel warningLabel = new JLabel("Warning");
+    private final JButton cancelButton;
+    private final JLabel warningLabel;
 
     public RegisterUI(AppFrame app, UserService userService) {
         this.app = app;
@@ -57,32 +58,17 @@ public class RegisterUI extends JPanel {
         warningLabel = app.createLabel(" ", Color.RED, 16f, 2);
         warningLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        nameField = new JTextField();
-        nameField.setMaximumSize(new Dimension(300, 30));
-        nameField.setMargin(new Insets(8, 8, 8, 8));
-        nameField.setFont(app.getRegularFont().deriveFont(16f));
-        nameField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        nameField = app.createTextField();
 
-        emailField = new JTextField();
-        emailField.setMaximumSize(new Dimension(300, 30));
-        emailField.setMargin(new Insets(8, 8, 8, 8));
-        emailField.setFont(app.getRegularFont().deriveFont(16f));
-        emailField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        emailField = app.createTextField();
 
-        phoneField = new JTextField();
-        phoneField.setMaximumSize(new Dimension(300, 30));
-        phoneField.setMargin(new Insets(8, 8, 8, 8));
-        phoneField.setFont(app.getRegularFont().deriveFont(16f));
-        phoneField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        phoneField = app.createTextField();
 
-        passwordField = new JPasswordField();
-        passwordField.setMaximumSize(new Dimension(300, 30));
-        passwordField.setMargin(new Insets(8, 8, 8, 8));
-        passwordField.setFont(app.getRegularFont().deriveFont(16f));
-        passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        passwordField = app.createPasswordField();
 
-        registerButton = app.createButton("Register", 20f);
-        registerButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        registerButton = app.createButton("Create Account", Color.BLUE, 20f, true);
+
+        cancelButton = app.createButton("Cancel", Color.decode("#F94449"), 20f, true);
 
         card.add(Box.createVerticalGlue());
         card.add(nameLabel);
@@ -104,6 +90,8 @@ public class RegisterUI extends JPanel {
         card.add(warningLabel);
         card.add(Box.createVerticalStrut(20));
         card.add(registerButton);
+        card.add(Box.createVerticalStrut(16));
+        card.add(cancelButton);
         card.add(Box.createVerticalGlue());
 
         add(Box.createVerticalGlue());
@@ -122,7 +110,6 @@ public class RegisterUI extends JPanel {
         registerButton.addActionListener(e -> handleRegistration());
     }
 
-
     private void handleRegistration() {
         String name = nameField.getText();
         String email = emailField.getText();
@@ -136,9 +123,10 @@ public class RegisterUI extends JPanel {
                 warningLabel.setText("Email already in use!");
             } else {
                 userService.registerUser(name, email, phone, password);
+                app.getLoginUI().getWarningLabel().setText("Account registered! You may login now.");
                 app.showScreen("login");
             }
         }
     }
-}
 
+}

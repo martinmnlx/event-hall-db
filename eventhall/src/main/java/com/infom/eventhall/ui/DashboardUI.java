@@ -41,13 +41,16 @@ public class DashboardUI extends JPanel {
         welcomeLayout.add(nameLabel);
         welcomeLayout.add(exclamLabel);
 
-        reservationsButton = app.createButton("View Your Current Bookings", 24f);
+        reservationsButton = app.createButton("View Your Current Bookings", Color.BLUE, 24f, false);
+        reservationsButton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
         reservationsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        hallsButton = app.createButton("Browse Event Halls", 24f);
+        hallsButton = app.createButton("Browse Event Halls", Color.BLUE, 24f, false);
+        hallsButton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
         hallsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        profileButton = app.createButton("View/Edit Your Profile", 24f);
+        profileButton = app.createButton("View/Edit Your Profile", Color.BLUE, 24f, false);
+        profileButton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
         profileButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         add(Box.createVerticalGlue());

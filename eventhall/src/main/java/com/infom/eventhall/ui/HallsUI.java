@@ -155,7 +155,7 @@ public class HallsUI extends JPanel {
                 JLabel statusLabel = app.createLabel("Status: ", Color.BLACK, 16f, 2);
                 JLabel availLabel = app.createLabel(hall.getStatus().name(), Color.decode("#5BB450"), 16f, 3);
 
-                JButton bookButton = app.createButton("Book", 20f);
+                JButton bookButton = app.createButton("Book", Color.BLUE, 20f, false);
 
                 if (hall.getStatus().name().equals("Maintenance")) {
                     availLabel.setForeground(Color.decode("#F94449"));
