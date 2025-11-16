@@ -15,7 +15,7 @@ public class StaffDAO {
     }
 
     public boolean createStaff(Staff staff) {
-        String sql = "INSERT INTO Staff (name, role, phoneNumber) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Staff (name, role, phone) VALUES (?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setString(1, staff.getName());
@@ -32,7 +32,7 @@ public class StaffDAO {
     }
 
     public Staff getStaffById(int staffId) {
-        String sql = "SELECT * FROM Staff WHERE staffId = ?";
+        String sql = "SELECT * FROM Staff WHERE staff_id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setInt(1, staffId);
@@ -47,6 +47,40 @@ public class StaffDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Staff> getStaffByName(String staffName) {
+        List<Staff> staffList = new ArrayList<>();
+        String sql = "SELECT * FROM Staff WHERE name = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, staffName);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                while (rs.next()) {
+                    staffList.add(mapRowToStaff(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return staffList;
+    }
+
+    public List<Staff> getStaffByRole(String role) {
+        List<Staff> staffList = new ArrayList<>();
+        String sql = "SELECT * FROM Staff WHERE role = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, role);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                while (rs.next()) {
+                    staffList.add(mapRowToStaff(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return staffList;
     }
 
     public List<Staff> getAllStaff() {
@@ -84,7 +118,7 @@ public class StaffDAO {
     }
 
     public boolean deleteStaff(int staffId) {
-        String sql = "DELETE FROM Staff WHERE staffId = ?";
+        String sql = "DELETE FROM Staff WHERE staff_id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, staffId);

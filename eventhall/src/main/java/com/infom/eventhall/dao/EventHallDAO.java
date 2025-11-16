@@ -49,6 +49,56 @@ public class EventHallDAO {
         return null;
     }
 
+    public EventHall getHallByName(String eventHallName) {
+        String sql = "SELECT * FROM Event_Halls WHERE hall_name = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, eventHallName);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                if (rs.next()) {
+                    return mapRowToEventHall(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<EventHall> getHallByCapacity(int capacity) {
+        List<EventHall> EventHallList = new ArrayList<>();
+        String sql = "SELECT * FROM Event_Halls WHERE capacity >= ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, capacity);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                while (rs.next()) {
+                    EventHallList.add(mapRowToEventHall(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return EventHallList;
+    }
+
+    public List<EventHall> getHallByLocation(String location) {
+        List<EventHall> EventHallList = new ArrayList<>();
+        String sql = "SELECT * FROM Event_Halls WHERE location = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, location);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                while (rs.next()) {
+                    EventHallList.add(mapRowToEventHall(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return EventHallList;
+    }
+
     public List<EventHall> getAllEventHalls() {
         List<EventHall> hallList = new ArrayList<>();
         String sql = "SELECT * FROM Event_Halls";

@@ -49,6 +49,60 @@ public class EquipmentDAO {
         return null;
     }
 
+    public List<Equipment> getEquipmentByName(String equipmentName) {
+        List<Equipment> equipmentList = new ArrayList<>();
+        String sql = "SELECT * FROM Equipment WHERE equipment_name = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, equipmentName);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                while (rs.next()) {
+                    equipmentList.add(mapRowToEquipment(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return equipmentList;
+    }
+
+    public List<Equipment> getEquipmentByQuantity(int quantity) {
+        List<Equipment> equipmentList = new ArrayList<>();
+        String sql = "SELECT * FROM Equipment WHERE quantity_total >= ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, quantity);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                while (rs.next()) {
+                    equipmentList.add(mapRowToEquipment(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return equipmentList;
+    }
+
+    public List<Equipment> getEquipmentByStatus(Equipment.EquipmentStatus status) {
+        List<Equipment> equipmentList = new ArrayList<>();
+        String sql = "SELECT * FROM Equipment WHERE status = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, status.name());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    equipmentList.add(mapRowToEquipment(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return equipmentList;
+    }
+
     public List<Equipment> getAllEquipments() {
         List<Equipment> equipmentList = new ArrayList<>();
         String sql = "SELECT * FROM Equipment";

@@ -70,6 +70,23 @@ public class UserDAO {
         return null;
     }
 
+    public List<User> getUserByName(String name) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE name = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, name);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                while (rs.next()) {
+                    users.add(mapRowToUser(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM Users";

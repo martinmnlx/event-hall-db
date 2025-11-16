@@ -6,6 +6,7 @@ import com.infom.eventhall.DatabaseManager;
 
 import java.sql.Connection;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public class UserService {
@@ -37,5 +38,35 @@ public class UserService {
             return user;
         }
         return null;
+    }
+
+    public User getUserById(int userId) {
+        return userDAO.getUserById(userId);
+    }
+
+    public User getUserByEmail(String email) {
+        return userDAO.getUserByEmail(email);
+    }
+
+    public List<User> getUserByName(String name) {
+        return userDAO.getUserByName(name);
+    }
+
+    public List<User> getAllUsers() {
+        return userDAO.getAllUsers();
+    }
+
+    //admin ability
+
+    public boolean createUser(User user) {
+        return userDAO.createUser(user);
+    }
+
+    public boolean updateUser(User user) {
+        return userDAO.updateUser(user);
+    }
+
+    public boolean deleteUser(int userId) {
+        return userDAO.deleteUser(userId);
     }
 }
