@@ -106,11 +106,15 @@ VALUES
 ('Azure Grand Hall', 250, 'Pasig City', 'Available'),
 ('Crystal Event Center', 300, 'Taguig City', 'Available'),
 ('Emerald Function Hall', 100, 'Mandaluyong City', 'Maintenance'),
-('Golden Gate Hall', 180, 'Manila', 'Available'),
+('Golden Gate Hall', 180, 'Parañaque City', 'Available'),
 ('Grand Vista Hall', 200, 'Makati City', 'Available'),
 ('Royal Orchid Hall', 200, 'Davao City', 'Available'),
 ('Sapphire Banquet Hall', 220, 'Cebu City', 'Maintenance'),
-('Sunshine Ballroom', 150, 'Quezon City', 'Available');
+('Sunshine Ballroom', 150, 'Quezon City', 'Available'),
+('Amethyst Pavilion', 130, 'Las Piñas City', 'Available'),
+('Diamond Atrium', 280, 'Caloocan City', 'Available'),
+('Pearl Heritage Hall', 160, 'Bacoor City', 'Maintenance'),
+('Ruby Celebration Hall', 190, 'Valenzuela City', 'Available');
 
 INSERT INTO Equipment (equipment_name, quantity_total)
 VALUES
