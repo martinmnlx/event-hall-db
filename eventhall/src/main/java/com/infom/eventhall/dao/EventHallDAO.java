@@ -114,6 +114,22 @@ public class EventHallDAO {
         return hallList;
     }
 
+    public List<String> getDistinctLocations() {
+        List<String> locationList = new ArrayList<>();
+        String sql = "SELECT DISTINCT location FROM Event_Halls";
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                locationList.add(rs.getString("location"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return locationList;
+    }
+
     public boolean updateEventHall(EventHall eventHall) {
         String sql = "UPDATE Event_Halls SET hall_name = ?, capacity = ?, location = ?, status = ? WHERE hall_id = ?";
 

@@ -56,7 +56,7 @@ public class AppFrame extends JFrame {
 
         setVisible(true);
 
-        showScreen("login");
+        showScreen("halls");
     }
 
     public void showScreen(String name) {

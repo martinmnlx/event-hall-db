@@ -11,15 +11,23 @@ public class HallsUI extends JPanel {
 
     private final AppFrame app;
 
-    private JPanel hallsPanel;
-    private JComboBox<String> cityDropdown;
-    private JTextField nameSearch;
-    private JSpinner minCapacity;
-    private JComboBox<String> statusDropdown;
-    private JLabel numResults;
+    private final JPanel hallsPanel;
+    private final JComboBox<String> cityDropdown;
+    private final JTextField nameSearch;
+    private final JSpinner minCapacity;
+    private final JComboBox<String> statusDropdown;
+    private final JLabel numResults;
+
+    private List<EventHall> halls;
+    private List<String> cities;
 
     public HallsUI(AppFrame app) {
         this.app = app;
+
+        halls = app.getDb().getEventHallDAO().getAllEventHalls();
+        cities = app.getDb().getEventHallDAO().getDistinctLocations();
+
+        cities.add(0,"All");
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -31,11 +39,11 @@ public class HallsUI extends JPanel {
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
 
-        nameSearch = new JTextField(16);
+        nameSearch = new JTextField(12);
         nameSearch.setMargin(new Insets(4, 4, 4, 4));
         nameSearch.setFont(app.getRegularFont().deriveFont(14f));
 
-        cityDropdown = new JComboBox<>(new String[]{"All", "Manila", "Cebu"});
+        cityDropdown = new JComboBox<>(cities.toArray(new String[0]));
         cityDropdown.setFont(app.getRegularFont().deriveFont(14f));
         ((JLabel) cityDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
@@ -99,7 +107,6 @@ public class HallsUI extends JPanel {
     // Refresh hall cards dynamically
     public void refreshHalls() {
         hallsPanel.removeAll();
-        List<EventHall> halls = app.getDb().getEventHallDAO().getAllEventHalls();
 
         int hallCount = 0;
 
@@ -116,17 +123,17 @@ public class HallsUI extends JPanel {
 
             if (matchesCity && matchesName && matchesCapacity && matchesStatus) {
                 // --- Card panel ---
-                JPanel card = new JPanel();
-                card.setLayout(new BoxLayout(card, BoxLayout.X_AXIS));
-                card.setAlignmentX(Component.CENTER_ALIGNMENT);
-                card.setBorder(
+                JPanel hallCard = new JPanel();
+                hallCard.setLayout(new BoxLayout(hallCard, BoxLayout.X_AXIS));
+                hallCard.setAlignmentX(Component.CENTER_ALIGNMENT);
+                hallCard.setBorder(
                         BorderFactory.createCompoundBorder(
                                 BorderFactory.createLineBorder(Color.GRAY, 1),
                                 BorderFactory.createEmptyBorder(20, 20, 20, 20)
                         )
                 );
-                card.setMinimumSize(new Dimension(760 , 172));
-                card.setMaximumSize(new Dimension(760 , 172));
+                hallCard.setMinimumSize(new Dimension(760 , 172));
+                hallCard.setMaximumSize(new Dimension(760 , 172));
 
                 JPanel main = new JPanel();
                 main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
@@ -168,12 +175,12 @@ public class HallsUI extends JPanel {
                 main.add(Box.createVerticalStrut(4));
                 main.add(status);
 
-                card.add(main);
-                card.add(side);
+                hallCard.add(main);
+                hallCard.add(side);
 
                 hallCount ++;
 
-                hallsPanel.add(card);
+                hallsPanel.add(hallCard);
                 hallsPanel.add(Box.createRigidArea(new Dimension(0, 12)));
             }
         }
