@@ -2,10 +2,10 @@ package com.infom.eventhall.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 
 import com.infom.eventhall.model.EventHall;
+import lombok.Getter;
 
 public class HallsUI extends JPanel {
 
@@ -20,6 +20,9 @@ public class HallsUI extends JPanel {
 
     private List<EventHall> halls;
     private List<String> cities;
+
+    @Getter
+    private int chosenHallID = 0;
 
     public HallsUI(AppFrame app) {
         this.app = app;
@@ -45,6 +48,7 @@ public class HallsUI extends JPanel {
 
         cityDropdown = new JComboBox<>(cities.toArray(new String[0]));
         cityDropdown.setFont(app.getRegularFont().deriveFont(14f));
+        cityDropdown.setBackground(Color.WHITE);
         ((JLabel) cityDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
         minCapacity = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 10));
@@ -54,6 +58,7 @@ public class HallsUI extends JPanel {
 
         statusDropdown = new JComboBox<>(new String[]{"All", "Available", "Maintenance"});
         statusDropdown.setFont(app.getRegularFont().deriveFont(14f));
+        statusDropdown.setBackground(Color.WHITE);
         ((JLabel) statusDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
         filterPanel.add(app.createLabel("Name: ", Color.BLACK, 16f, 2));
@@ -160,6 +165,11 @@ public class HallsUI extends JPanel {
                     bookButton.setText("Under Maintenance");
                 }
 
+                bookButton.addActionListener(e -> {
+                    chosenHallID = hall.getHallId();
+                    app.showScreen("reserve");
+                });
+
                 status.add(statusLabel);
                 status.add(availLabel);
                 status.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -190,4 +200,5 @@ public class HallsUI extends JPanel {
         hallsPanel.revalidate();
         hallsPanel.repaint();
     }
+
 }

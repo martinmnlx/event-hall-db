@@ -39,7 +39,7 @@ public class RegisterUI extends JPanel {
         card.setMaximumSize(new Dimension(350, 600));
         card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        titleLabel = app.createLabel("Create an Account", Color.BLUE, 40f, 3);
+        titleLabel = app.createLabel("Create an Account", Color.BLUE, 60f, 3);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         nameLabel = app.createLabel("Name", Color.BLACK, 20f, 2);

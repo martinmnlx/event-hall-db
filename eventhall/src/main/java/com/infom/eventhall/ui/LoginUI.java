@@ -36,7 +36,7 @@ public class LoginUI extends JPanel {
         card.setMaximumSize(new Dimension(350, 600));
         card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        titleLabel = app.createLabel("EventBuddy", Color.BLUE, 60f, 3);
+        titleLabel = app.createLabel("EventBuddy", Color.BLUE, 80f, 3);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         emailLabel = app.createLabel("Email", Color.BLACK, 20f, 2);

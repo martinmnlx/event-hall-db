@@ -30,6 +30,7 @@ public class AppFrame extends JFrame {
     private final RegisterUI registerUI;
     private final DashboardUI dashboardUI;
     private final HallsUI hallsUI;
+    private final ReserveUI reserveUI;
 
     public AppFrame() {
         db = new DatabaseManager();
@@ -51,6 +52,7 @@ public class AppFrame extends JFrame {
         mainPanel.add(registerUI = new RegisterUI(this, userService), "register");
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
         mainPanel.add(hallsUI = new HallsUI(this), "halls");
+        mainPanel.add(reserveUI = new ReserveUI(this), "reserve");
 
         add(mainPanel);
 
@@ -64,6 +66,7 @@ public class AppFrame extends JFrame {
 
         switch (name) {
             case "dashboard" -> dashboardUI.refresh();
+            case "reserve" -> reserveUI.refresh();
         }
 
         System.out.println("Panel changed: " + name);
