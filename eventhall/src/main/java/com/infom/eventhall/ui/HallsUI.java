@@ -12,26 +12,87 @@ public class HallsUI extends JPanel {
     private final AppFrame app;
 
     private JPanel hallsPanel;
+    private JComboBox<String> cityDropdown;
+    private JTextField nameSearch;
+    private JSpinner minCapacity;
+    private JComboBox<String> statusDropdown;
+    private JLabel numResults;
 
     public HallsUI(AppFrame app) {
         this.app = app;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        // --- Title ---
         JLabel titleLabel = app.createLabel("Event Halls", Color.BLUE, 60f, 3);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // --- Filters ---
+        JPanel filterPanel = new JPanel();
+        filterPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
+
+        nameSearch = new JTextField(16);
+        nameSearch.setMargin(new Insets(4, 4, 4, 4));
+        nameSearch.setFont(app.getRegularFont().deriveFont(14f));
+
+        cityDropdown = new JComboBox<>(new String[]{"All", "Manila", "Cebu"});
+        cityDropdown.setFont(app.getRegularFont().deriveFont(14f));
+        ((JLabel) cityDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+        minCapacity = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 10));
+        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) minCapacity.getEditor();
+        editor.getTextField().setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        editor.getTextField().setFont(app.getRegularFont().deriveFont(14f));
+
+        statusDropdown = new JComboBox<>(new String[]{"All", "Available", "Maintenance"});
+        statusDropdown.setFont(app.getRegularFont().deriveFont(14f));
+        ((JLabel) statusDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+        filterPanel.add(app.createLabel("Name: ", Color.BLACK, 16f, 2));
+        filterPanel.add(nameSearch);
+        filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        filterPanel.add(app.createLabel("Min. Capacity: ", Color.BLACK, 16f, 2));
+        filterPanel.add(minCapacity);
+        filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        filterPanel.add(app.createLabel("City: ", Color.BLACK, 16f, 2));
+        filterPanel.add(cityDropdown);
+        filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        filterPanel.add(app.createLabel("Status: ", Color.BLACK, 16f, 2));
+        filterPanel.add(statusDropdown);
+        filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        filterPanel.add(numResults = app.createLabel("0 Results", Color.BLUE, 16f, 3));
+
+        // --- Halls panel inside scroll pane ---
         hallsPanel = new JPanel();
         hallsPanel.setLayout(new BoxLayout(hallsPanel, BoxLayout.Y_AXIS));
 
         JScrollPane scrollPane = new JScrollPane(hallsPanel);
         scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        add(Box.createVerticalStrut(40));
+        // --- Add components to main panel ---
+        add(Box.createVerticalStrut(28));
         add(titleLabel);
         add(Box.createVerticalStrut(40));
+        add(filterPanel);
+        add(Box.createVerticalStrut(40));
         add(scrollPane);
+        add(Box.createVerticalStrut(24));
 
+        // --- Listeners for filters ---
+        cityDropdown.addActionListener(e -> refreshHalls());
+
+        nameSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { refreshHalls(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { refreshHalls(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { refreshHalls(); }
+        });
+
+        minCapacity.addChangeListener(e -> refreshHalls());
+
+        statusDropdown.addActionListener(e -> refreshHalls());
+
+        // --- Initial load ---
         refreshHalls();
     }
 
@@ -40,64 +101,84 @@ public class HallsUI extends JPanel {
         hallsPanel.removeAll();
         List<EventHall> halls = app.getDb().getEventHallDAO().getAllEventHalls();
 
+        int hallCount = 0;
+
+        String selectedCity = (String) cityDropdown.getSelectedItem();
+        String searchText = nameSearch.getText().toLowerCase();
+        int minCap = (int) minCapacity.getValue();
+        String selectedStatus = (String) statusDropdown.getSelectedItem();
+
         for (EventHall hall : halls) {
-            JPanel card = new JPanel();
-            card.setLayout(new BoxLayout(card, BoxLayout.X_AXIS));
-            card.setAlignmentX(Component.CENTER_ALIGNMENT);
-            card.setBorder(
-                    BorderFactory.createCompoundBorder(
-                            BorderFactory.createLineBorder(Color.GRAY, 1),  // outer border
-                            BorderFactory.createEmptyBorder(20, 20, 20, 20) // inner padding
-                    )
-            );
-            card.setMaximumSize(new Dimension(800 , 200));
+            boolean matchesCity = selectedCity.equals("All") || hall.getLocation().equals(selectedCity);
+            boolean matchesName = hall.getHallName().toLowerCase().contains(searchText);
+            boolean matchesCapacity = hall.getCapacity() >= minCap;
+            boolean matchesStatus = selectedStatus.equals("All") || hall.getStatus().name().equals(selectedStatus);
 
-            JPanel main = new JPanel();
-            main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
+            if (matchesCity && matchesName && matchesCapacity && matchesStatus) {
+                // --- Card panel ---
+                JPanel card = new JPanel();
+                card.setLayout(new BoxLayout(card, BoxLayout.X_AXIS));
+                card.setAlignmentX(Component.CENTER_ALIGNMENT);
+                card.setBorder(
+                        BorderFactory.createCompoundBorder(
+                                BorderFactory.createLineBorder(Color.GRAY, 1),
+                                BorderFactory.createEmptyBorder(20, 20, 20, 20)
+                        )
+                );
+                card.setMinimumSize(new Dimension(760 , 172));
+                card.setMaximumSize(new Dimension(760 , 172));
 
-            JPanel side = new JPanel();
-            side.setLayout(new BoxLayout(side, BoxLayout.Y_AXIS));
+                JPanel main = new JPanel();
+                main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
 
-            JPanel status = new JPanel();
-            status.setLayout(new BoxLayout(status, BoxLayout.X_AXIS));
+                JPanel side = new JPanel();
+                side.setLayout(new BoxLayout(side, BoxLayout.Y_AXIS));
 
-            JLabel nameLabel = app.createLabel(hall.getHallName(), Color.BLUE, 32f, 3);
-            JLabel capacityLabel = app.createLabel("Capacity: " + hall.getCapacity(), Color.BLACK, 16f, 2);
-            JLabel locationLabel = app.createLabel("Location: " + hall.getLocation(), Color.BLACK, 16f, 2);
-            JLabel statusLabel = app.createLabel("Status: ", Color.BLACK, 16f, 2);
-            JLabel availLabel = app.createLabel(hall.getStatus().name(), Color.decode("#5BB450"), 16f, 3);
+                JPanel status = new JPanel();
+                status.setLayout(new BoxLayout(status, BoxLayout.X_AXIS));
 
-            JButton bookButton = app.createButton("Book", 20f);
+                JLabel nameLabel = app.createLabel(hall.getHallName(), Color.BLUE, 32f, 3);
+                JLabel capacityLabel = app.createLabel("Capacity: " + hall.getCapacity(), Color.BLACK, 16f, 2);
+                JLabel locationLabel = app.createLabel("Location: " + hall.getLocation(), Color.BLACK, 16f, 2);
+                JLabel statusLabel = app.createLabel("Status: ", Color.BLACK, 16f, 2);
+                JLabel availLabel = app.createLabel(hall.getStatus().name(), Color.decode("#5BB450"), 16f, 3);
 
-            if (hall.getStatus().name().equals("Maintenance")) {
-                availLabel.setForeground(Color.decode("#F94449"));
-                bookButton.setEnabled(false);
-                bookButton.setBackground(Color.LIGHT_GRAY);
-                bookButton.setForeground(Color.WHITE);
-                bookButton.setText("Under Maintenance");
+                JButton bookButton = app.createButton("Book", 20f);
+
+                if (hall.getStatus().name().equals("Maintenance")) {
+                    availLabel.setForeground(Color.decode("#F94449"));
+                    bookButton.setEnabled(false);
+                    bookButton.setBackground(Color.LIGHT_GRAY);
+                    bookButton.setForeground(Color.WHITE);
+                    bookButton.setText("Under Maintenance");
+                }
+
+                status.add(statusLabel);
+                status.add(availLabel);
+                status.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                side.add(Box.createVerticalGlue());
+                side.add(bookButton);
+
+                main.add(nameLabel);
+                main.add(Box.createVerticalStrut(16));
+                main.add(capacityLabel);
+                main.add(Box.createVerticalStrut(4));
+                main.add(locationLabel);
+                main.add(Box.createVerticalStrut(4));
+                main.add(status);
+
+                card.add(main);
+                card.add(side);
+
+                hallCount ++;
+
+                hallsPanel.add(card);
+                hallsPanel.add(Box.createRigidArea(new Dimension(0, 12)));
             }
-
-            status.add(statusLabel);
-            status.add(availLabel);
-            status.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-            side.add(Box.createVerticalGlue());
-            side.add(bookButton);
-
-            main.add(nameLabel);
-            main.add(Box.createVerticalStrut(8));
-            main.add(capacityLabel);
-            main.add(Box.createVerticalStrut(4));
-            main.add(locationLabel);
-            main.add(Box.createVerticalStrut(4));
-            main.add(status);
-
-            card.add(main);
-            card.add(side);
-
-            hallsPanel.add(card);
-            hallsPanel.add(Box.createRigidArea(new Dimension(0, 12))); // spacing
         }
+
+        numResults.setText(hallCount + " Results");
 
         hallsPanel.revalidate();
         hallsPanel.repaint();

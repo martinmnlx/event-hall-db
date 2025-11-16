@@ -39,7 +39,7 @@ public class AppFrame extends JFrame {
         loadFonts();
 
         setTitle("Event Hall Reservation");
-        setSize(1200, 800);
+        setSize(1200, 900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
