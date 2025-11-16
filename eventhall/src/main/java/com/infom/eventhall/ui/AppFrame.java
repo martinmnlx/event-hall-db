@@ -58,7 +58,7 @@ public class AppFrame extends JFrame {
 
         setVisible(true);
 
-        showScreen("dashboard");
+        showScreen("login");
     }
 
     public void showScreen(String name) {
@@ -102,10 +102,10 @@ public class AppFrame extends JFrame {
         JButton b = new JButton(text);
 
         b.setFont(getRegularFont().deriveFont(size));
+        b.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
         if (fixed) {
             b.setMaximumSize(new Dimension(316, 40));
             b.setPreferredSize(new Dimension(316, 40));
-            b.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         }
         b.setFocusPainted(false);
         b.setContentAreaFilled(true);

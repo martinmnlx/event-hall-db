@@ -34,11 +34,9 @@ public class HallsUI extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        // --- Title ---
         JLabel titleLabel = app.createLabel("Event Halls", Color.BLUE, 60f, 3);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // --- Filters ---
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
 
@@ -83,16 +81,19 @@ public class HallsUI extends JPanel {
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        // --- Add components to main panel ---
-        add(Box.createVerticalStrut(28));
+        JButton dashboardButton = app.createButton("Return to Dashboard", Color.BLUE, 16f, false);
+        dashboardButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        add(Box.createVerticalStrut(40));
         add(titleLabel);
         add(Box.createVerticalStrut(40));
         add(filterPanel);
         add(Box.createVerticalStrut(40));
         add(scrollPane);
-        add(Box.createVerticalStrut(24));
+        add(Box.createVerticalStrut(40));
+        add(dashboardButton);
+        add(Box.createVerticalStrut(40));
 
-        // --- Listeners for filters ---
         cityDropdown.addActionListener(e -> refreshHalls());
 
         nameSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
@@ -105,7 +106,8 @@ public class HallsUI extends JPanel {
 
         statusDropdown.addActionListener(e -> refreshHalls());
 
-        // --- Initial load ---
+        dashboardButton.addActionListener(e -> app.showScreen("dashboard"));
+
         refreshHalls();
     }
 

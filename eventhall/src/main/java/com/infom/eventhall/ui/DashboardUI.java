@@ -16,6 +16,7 @@ public class DashboardUI extends JPanel {
     private final JButton reservationsButton;
     private final JButton hallsButton;
     private final JButton profileButton;
+    private final JButton logoutButton;
 
     public DashboardUI(AppFrame app) {
         this.app = app;
@@ -42,16 +43,16 @@ public class DashboardUI extends JPanel {
         welcomeLayout.add(exclamLabel);
 
         reservationsButton = app.createButton("View Your Current Bookings", Color.BLUE, 24f, false);
-        reservationsButton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
         reservationsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         hallsButton = app.createButton("Browse Event Halls", Color.BLUE, 24f, false);
-        hallsButton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
         hallsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         profileButton = app.createButton("View/Edit Your Profile", Color.BLUE, 24f, false);
-        profileButton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
         profileButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        logoutButton = app.createButton("Logout", Color.decode("#F94449"), 24f, false);
+        logoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         add(Box.createVerticalGlue());
         add(titleLabel);
@@ -63,9 +64,16 @@ public class DashboardUI extends JPanel {
         add(hallsButton);
         add(Box.createVerticalStrut(20));
         add(profileButton);
+        add(Box.createVerticalStrut(40));
+        add(logoutButton);
         add(Box.createVerticalGlue());
 
         hallsButton.addActionListener(e -> app.showScreen("halls"));
+
+        logoutButton.addActionListener(e -> {
+            app.setUser(null);
+            app.showScreen("login");
+        });
     }
 
     public void refresh() {

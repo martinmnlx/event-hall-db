@@ -106,7 +106,6 @@ public class LoginUI extends JPanel {
             return;
         }
 
-        warningLabel.setText("Login successful!");
         app.setUser(userService.authenticateUser(email, password));
         System.out.println("Username: " + app.getUser().getName());
         app.showScreen("dashboard");
