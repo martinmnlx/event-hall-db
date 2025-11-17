@@ -5,6 +5,7 @@ import com.infom.eventhall.model.EquipmentAllocation;
 import com.infom.eventhall.model.User;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +84,27 @@ public class EquipmentAllocationDAO {
             e.printStackTrace();
         }
         return allocationList;
+    }
+
+    public int getReservedQuantityForTheDay(int equipmentId, LocalDate eventDate) {
+        // to prevent giving garbage values (For IFNULL)
+        String sql = "SELECT IFNULL(SUM(ea.quantity_used), 0) FROM equipment_allocations ea " +
+                "JOIN reservations r ON ea.reservation_id = r.reservation_id " +
+                "WHERE ea.equipment_id = ? AND r.status IN ('Confirmed', 'Pending') AND r.event_date = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, equipmentId);
+            stmt.setDate(2, Date.valueOf(eventDate));
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public boolean updateAllocation(EquipmentAllocation allocation) {
