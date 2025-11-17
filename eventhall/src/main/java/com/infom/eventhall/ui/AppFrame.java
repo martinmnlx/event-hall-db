@@ -40,7 +40,7 @@ public class AppFrame extends JFrame {
         loadFonts();
 
         setTitle("Event Hall Reservation");
-        setSize(1200, 900);
+        setSize(1500, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -58,7 +58,7 @@ public class AppFrame extends JFrame {
 
         setVisible(true);
 
-        showScreen("login");
+        showScreen("halls");
     }
 
     public void showScreen(String name) {

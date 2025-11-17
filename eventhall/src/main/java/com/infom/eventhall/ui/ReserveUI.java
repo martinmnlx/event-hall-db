@@ -2,6 +2,7 @@ package com.infom.eventhall.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 import com.infom.eventhall.model.EventHall;
 
@@ -25,11 +26,13 @@ public class ReserveUI extends JPanel {
     private final JLabel hallLabel;
     private final JLabel locationLabel;
     private final JLabel typeLabel;
+    private final JLabel guestLabel;
     private final JLabel dateLabel;
     private final JLabel equipmentLabel;
     private final JTextField hallField;
     private final JTextField locationField;
     private final JComboBox<String> typeDropdown;
+    private final JSpinner guestSpinner;
     private final JButton confirmButton;
     private final JButton cancelButton;
 
@@ -94,6 +97,9 @@ public class ReserveUI extends JPanel {
         typeLabel = app.createLabel("Select Event Type", Color.BLACK, 20f, 2);
         typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        guestLabel = app.createLabel("Enter Number of Guests", Color.BLACK, 20f, 2);
+        guestLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         dateLabel = app.createLabel("Select Event Date", Color.BLACK, 20f, 2);
         dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -123,6 +129,14 @@ public class ReserveUI extends JPanel {
         ((JLabel) typeDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(6, 8, 6, 8));
         typeDropdown.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        guestSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 10));
+        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) guestSpinner.getEditor();
+        editor.getTextField().setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        editor.getTextField().setFont(app.getRegularFont().deriveFont(16f));
+        editor.getTextField().setHorizontalAlignment(JTextField.LEFT);
+        guestSpinner.setMaximumSize(new Dimension(300, 60));
+        guestSpinner.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 
@@ -137,6 +151,10 @@ public class ReserveUI extends JPanel {
         infoPanel.add(typeLabel);
         infoPanel.add(Box.createVerticalStrut(8));
         infoPanel.add(typeDropdown);
+        infoPanel.add(Box.createVerticalStrut(16));
+        infoPanel.add(guestLabel);
+        infoPanel.add(Box.createVerticalStrut(8));
+        infoPanel.add(guestSpinner);
         infoPanel.add(Box.createVerticalStrut(16));
         infoPanel.add(dateLabel);
         infoPanel.add(Box.createVerticalStrut(8));
@@ -197,6 +215,9 @@ public class ReserveUI extends JPanel {
 
         hallField.setText(hall.getHallName());
         locationField.setText(hall.getLocation());
+        SpinnerNumberModel model = (SpinnerNumberModel) guestSpinner.getModel();
+        model.setMaximum(hall.getCapacity());
+        model.setValue(hall.getCapacity());
 
         System.out.println("User chose hall: " + hall.getHallName());
     }
