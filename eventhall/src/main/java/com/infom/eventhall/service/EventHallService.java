@@ -6,7 +6,7 @@ import com.infom.eventhall.dao.ReservationDAO;
 import com.infom.eventhall.DatabaseManager;
 
 import java.sql.Connection;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +20,9 @@ public class EventHallService {
         this.reservationDAO = db.getReservationDAO();
     }
 
-    public List<EventHall> findAllAvailableEventHalls(LocalDateTime startsOn, LocalDateTime endsOn) {
+    public List<EventHall> findAllAvailableEventHalls(LocalDate eventDate) {
 
-        List<Integer> conflictingHallIds = reservationDAO.findConflictingHallIds(startsOn, endsOn);
+        List<Integer> conflictingHallIds = reservationDAO.findConflictingHallIds(eventDate);
         List<EventHall> allEventHalls = eventHallDAO.getAllEventHalls();
         List<EventHall> availableEventHalls = new ArrayList<>();
 

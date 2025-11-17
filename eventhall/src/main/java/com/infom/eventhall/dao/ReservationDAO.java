@@ -4,7 +4,7 @@ import com.infom.eventhall.model.Reservation;
 import com.infom.eventhall.model.User;
 
 import java.sql.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,18 +160,17 @@ public class ReservationDAO {
         }
     }
 
-    public List<Integer> findConflictingHallIds(LocalDateTime newStartsOn, LocalDateTime newEndsOn) {
+    public List<Integer> findConflictingHallIds(LocalDate eventDate) {
         List<Integer> conflictingHallIds = new ArrayList<>();
 
-        // This query finds any booking that overlaps with the requested time
+        // This query finds any booking that overlaps with the requested date
         String sql = "SELECT r.hall_id FROM Reservations r " +
                 "WHERE r.status IN ('Confirmed', 'Pending') " +
-                "AND (r.starts_on < ? AND r.ends_on > ?)"; // (ExistingStart < NewEnd) AND (ExistingEnd > NewStart)
+                "AND r.event_date = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            stmt.setTimestamp(1, Timestamp.valueOf(newEndsOn));
-            stmt.setTimestamp(2, Timestamp.valueOf(newStartsOn));
+            stmt.setDate(1, Date.valueOf(eventDate));
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

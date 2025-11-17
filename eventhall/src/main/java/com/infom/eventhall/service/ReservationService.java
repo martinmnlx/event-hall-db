@@ -35,7 +35,7 @@ public class ReservationService {
             connection.setAutoCommit(false);
 
             //Checks for availableHalls
-            List<EventHall> availableEventHalls = eventHallService.findAllAvailableEventHalls(reservation.getStartsOn(), reservation.getEndsOn());
+            List<EventHall> availableEventHalls = eventHallService.findAllAvailableEventHalls(reservation.getEventDate());
 
             boolean isAvailable = false;
             for (EventHall eventHall : availableEventHalls) {
