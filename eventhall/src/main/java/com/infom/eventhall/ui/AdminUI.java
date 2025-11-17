@@ -101,6 +101,11 @@ public class AdminUI extends JPanel {
         deleteButton = app.createButton("Delete", Color.BLUE, 24f, false);
         logoutButton = app.createButton("Logout (Return to Login)", Color.decode("#F94449"), 24f, false);
 
+        logoutButton.addActionListener(e -> {
+            app.setUser(null);
+            app.showScreen("login");
+        });
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         buttonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
