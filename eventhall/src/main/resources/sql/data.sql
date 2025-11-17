@@ -17,7 +17,17 @@ VALUES
 ('Rico Mendoza', '09173456789', 'Head Staff'),
 ('Clara Villanueva', '09981234567', 'Head Staff'),
 ('Josefa Torres', '09234567890', 'Head Staff'),
-('Edgar Lim', '09187654321', 'Head Staff');
+('Edgar Lim', '09187654321', 'Head Staff'),
+('Luis Fernandez', '09190011223', 'Head Staff'),
+('Patricia Gomez', '09223344556', 'Head Staff'),
+('Miguel Santos', '09191122334', 'Head Staff'),
+('Veronica Cruz', '09224455667', 'Head Staff'),
+('Daniel Reyes', '09192233445', 'Head Staff'),
+('Monica Villanueva', '09225566778', 'Head Staff'),
+('Hector Lopez', '09193344556', 'Head Staff'),
+('Carla Mendoza', '09226677889', 'Head Staff'),
+('Emilio Torres', '09194455667', 'Head Staff'),
+('Isabel Lim', '09227788990', 'Head Staff');
 
 INSERT INTO Event_Halls (hall_name, capacity, location, status)
 VALUES
@@ -26,6 +36,9 @@ VALUES
 ('Emerald Function Hall', 100, 'Mandaluyong City', 'Maintenance'),
 ('Golden Gate Hall', 180, 'Taguig City', 'Available'),
 ('Grand Vista Hall', 200, 'Makati City', 'Available'),
+('Opal Grand Hall', 210, 'Quezon City', 'Available'),
+('Topaz Event Center', 230, 'Makati City', 'Available'),
+('Onyx Function Hall', 120, 'Pasig City', 'Available'),
 ('Royal Orchid Hall', 200, 'Mandaluyong City', 'Available'),
 ('Sapphire Banquet Hall', 220, 'Pasig City', 'Maintenance'),
 ('Sunshine Ballroom', 150, 'Quezon City', 'Available'),

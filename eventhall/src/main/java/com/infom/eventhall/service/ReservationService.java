@@ -124,6 +124,10 @@ public class ReservationService {
         }
     }
 
+    public boolean deleteReservation(int reservationId) {
+        return reservationDAO.deleteReservation(reservationId);
+    }
+
     public List<Reservation> getAllReservations() {
         return reservationDAO.getAllReservations();
     }

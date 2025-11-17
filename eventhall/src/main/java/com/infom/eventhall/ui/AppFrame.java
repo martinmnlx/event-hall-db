@@ -10,10 +10,7 @@ import com.infom.eventhall.DatabaseManager;
 import com.infom.eventhall.model.EventHall;
 import com.infom.eventhall.model.User;
 
-import com.infom.eventhall.service.EventHallService;
-import com.infom.eventhall.service.ReservationService;
-import com.infom.eventhall.service.StaffService;
-import com.infom.eventhall.service.UserService;
+import com.infom.eventhall.service.*;
 import lombok.Data;
 
 @Data
@@ -31,6 +28,7 @@ public class AppFrame extends JFrame {
     private final UserService userService;
     private final StaffService staffService;
     private final EventHallService eventHallService;
+    private final EquipmentService equipmentService;
     private final ReservationService reservationService;
 
     // Admin UI
@@ -52,6 +50,7 @@ public class AppFrame extends JFrame {
         userService = new UserService(db);
         staffService = new StaffService(db);
         eventHallService = new EventHallService(db);
+        equipmentService = new EquipmentService(db);
         reservationService = new ReservationService(db);
 
         loadFonts();
@@ -65,7 +64,7 @@ public class AppFrame extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        mainPanel.add(adminUI = new AdminUI(this, userService, staffService, eventHallService, reservationService), "admin");
+        mainPanel.add(adminUI = new AdminUI(this, userService, staffService, eventHallService, equipmentService, reservationService), "admin");
         mainPanel.add(loginUI = new LoginUI(this, userService), "login");
         mainPanel.add(registerUI = new RegisterUI(this, userService), "register");
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
@@ -77,7 +76,7 @@ public class AppFrame extends JFrame {
 
         setVisible(true);
 
-        showScreen("login");
+        showScreen("admin");
     }
 
     public void showScreen(String name) {

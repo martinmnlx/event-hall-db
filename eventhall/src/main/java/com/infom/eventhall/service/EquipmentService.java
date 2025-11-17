@@ -12,7 +12,7 @@ public class EquipmentService {
     private EquipmentDAO equipmentDAO;
 
     public EquipmentService(DatabaseManager db) {
-        // this.equipmentDAO = db.getEquipmentDAO();
+        this.equipmentDAO = db.getEquipmentDAO();
     }
 
     public Equipment getEquipmentByID(int equipmentId) {
