@@ -5,11 +5,13 @@ import java.awt.*;
 import java.util.List;
 
 import com.infom.eventhall.model.EventHall;
+import com.infom.eventhall.service.EventHallService;
 import lombok.Getter;
 
 public class HallsUI extends JPanel {
 
     private final AppFrame app;
+    private final EventHallService eventHallService;
 
     private final JPanel hallsPanel;
     private final JComboBox<String> cityDropdown;
@@ -24,10 +26,11 @@ public class HallsUI extends JPanel {
     @Getter
     private int chosenHallID = 0;
 
-    public HallsUI(AppFrame app) {
+    public HallsUI(AppFrame app, EventHallService h) {
         this.app = app;
+        this.eventHallService = h;
 
-        halls = app.getDb().getEventHallDAO().getAllEventHalls();
+        halls = eventHallService.getAllEventHalls();
         cities = app.getDb().getEventHallDAO().getDistinctLocations();
 
         cities.add(0,"All");

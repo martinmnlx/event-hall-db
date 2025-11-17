@@ -65,8 +65,8 @@ public class AppFrame extends JFrame {
         mainPanel.add(loginUI = new LoginUI(this, userService), "login");
         mainPanel.add(registerUI = new RegisterUI(this, userService), "register");
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
-        mainPanel.add(hallsUI = new HallsUI(this), "halls");
-        mainPanel.add(reserveUI = new ReserveUI(this, reservationService), "reserve");
+        mainPanel.add(hallsUI = new HallsUI(this, eventHallService), "halls");
+        mainPanel.add(reserveUI = new ReserveUI(this, reservationService, eventHallService), "reserve");
         mainPanel.add(bookingsUI = new BookingsUI(this, reservationService, eventHallService, userService, staffService), "bookings");
 
         add(mainPanel);

@@ -40,7 +40,7 @@ public class DashboardUI extends JPanel {
         welcomeLayout.add(nameLabel);
         welcomeLayout.add(exclamLabel);
 
-        bookingsButton = app.createButton("View Your Current Bookings", Color.BLUE, 24f, false);
+        bookingsButton = app.createButton("View Your Booking History", Color.BLUE, 24f, false);
         bookingsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         hallsButton = app.createButton("Browse Event Halls", Color.BLUE, 24f, false);

@@ -18,12 +18,13 @@ public class EquipmentAllocationDAO {
     }
 
     public boolean createAllocation(EquipmentAllocation allocation) {
-        String sql = "INSERT INTO Equipment_Allocations (reservation_id, equipment_id) VALUES (?, ?)";
+        String sql = "INSERT INTO Equipment_Allocations (reservation_id, equipment_id, quantity_used) VALUES (?, ?, ?)";
 
         // sets all the ? parameters
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, allocation.getReservationId());
             stmt.setInt(2, allocation.getEquipmentId());
+            stmt.setInt(3, allocation.getQuantityUsed());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;

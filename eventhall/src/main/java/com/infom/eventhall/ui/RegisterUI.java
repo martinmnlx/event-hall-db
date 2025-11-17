@@ -120,7 +120,7 @@ public class RegisterUI extends JPanel {
         if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
             warningLabel.setText("Fields cannot be left blank!");
         } else {
-            if (app.getDb().getUserDAO().getUserByEmail(emailField.getText()) != null) {
+            if (userService.getUserByEmail(emailField.getText()) != null) {
                 warningLabel.setText("Email already in use!");
             } else {
                 userService.registerUser(name, email, phone, password);

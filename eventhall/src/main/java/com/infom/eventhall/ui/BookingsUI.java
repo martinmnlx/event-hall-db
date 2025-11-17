@@ -100,14 +100,6 @@ public class BookingsUI extends JPanel {
         if (app.getUser() != null) reservations = reservationService.getReservationByUserId(app.getUser().getUserId());
         else return;
 
-        for (Reservation r : reservations) {
-            System.out.println("Reservation ID: " + r.getReservationId());
-            System.out.println("Hall ID: " + r.getHallId());
-            System.out.println("User ID: " + r.getUserId());
-            System.out.println("Guests: " + r.getGuessCount());
-            System.out.println("------------");
-        }
-
         bookingsPanel.removeAll();
 
         int reservationCount = 0;
@@ -130,8 +122,8 @@ public class BookingsUI extends JPanel {
                                 BorderFactory.createEmptyBorder(20, 20, 20, 20)
                         )
                 );
-                hallCard.setMinimumSize(new Dimension(760 , 172));
-                hallCard.setMaximumSize(new Dimension(760 , 172));
+                hallCard.setMinimumSize(new Dimension(760 , 260));
+                hallCard.setMaximumSize(new Dimension(760 , 260));
 
                 JPanel main = new JPanel();
                 main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
@@ -147,15 +139,25 @@ public class BookingsUI extends JPanel {
                 Staff staff = staffService.getStaffById(reservation.getStaffId());
 
                 JLabel nameLabel = app.createLabel(hall.getHallName(), Color.BLUE, 32f, 3);
-                JLabel capacityLabel = app.createLabel("User: " + user.getName(), Color.BLACK, 16f, 2);
-                JLabel locationLabel = app.createLabel("Staff: " + staff.getName(), Color.BLACK, 16f, 2);
+                JLabel dateLabel = app.createLabel("Date: " + reservation.getEventDate(), Color.BLACK, 16f, 2);
+                JLabel typeLabel = app.createLabel("Type: " + reservation.getEventType(), Color.BLACK, 16f, 2);
+                JLabel capacityLabel = app.createLabel("Staff-In-Charge: " + staff.getName(), Color.BLACK, 16f, 2);
+                JLabel locationLabel = app.createLabel("Contact Number: " + staff.getPhoneNumber(), Color.BLACK, 16f, 2);
+                JLabel guestsLabel = app.createLabel("Guest Count: " + reservation.getGuestCount(), Color.BLACK, 16f, 2);
                 JLabel statusLabel = app.createLabel("Status: ", Color.BLACK, 16f, 2);
-                JLabel availLabel = app.createLabel(reservation.getStatus().name(), Color.decode("#5BB450"), 16f, 3);
+
+                Color availColor = Color.BLACK;
+                if (reservation.getStatus().name().equals("Pending")) availColor = Color.ORANGE;
+                if (reservation.getStatus().name().equals("Confirmed")) availColor = Color.GREEN;
+                if (reservation.getStatus().name().equals("Canceled")) availColor = Color.RED;
+                if (reservation.getStatus().name().equals("Completed")) availColor = Color.BLUE;
+
+                JLabel availLabel = app.createLabel(reservation.getStatus().name(), availColor, 16f, 3);
 
                 JButton cancelButton = app.createButton("Cancel", Color.decode("#F94449"), 20f, false);
 
                 cancelButton.addActionListener(e -> {
-                    app.showScreen("reserve");
+                    // app.showScreen("reserve");
                 });
 
                 status.add(statusLabel);
@@ -167,9 +169,15 @@ public class BookingsUI extends JPanel {
 
                 main.add(nameLabel);
                 main.add(Box.createVerticalStrut(16));
+                main.add(typeLabel);
+                main.add(Box.createVerticalStrut(4));
+                main.add(dateLabel);
+                main.add(Box.createVerticalStrut(4));
                 main.add(capacityLabel);
                 main.add(Box.createVerticalStrut(4));
                 main.add(locationLabel);
+                main.add(Box.createVerticalStrut(4));
+                main.add(guestsLabel);
                 main.add(Box.createVerticalStrut(4));
                 main.add(status);
 

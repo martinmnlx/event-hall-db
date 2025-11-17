@@ -15,7 +15,7 @@ public class Reservation {
     private LocalDateTime createdOn;
     private LocalDate eventDate;
     private String eventType;
-    private Integer guessCount;
+    private Integer guestCount;
     private ReservationStatus status;
 
     public enum ReservationStatus {

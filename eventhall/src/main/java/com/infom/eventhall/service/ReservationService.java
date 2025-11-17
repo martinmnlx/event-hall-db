@@ -21,12 +21,12 @@ public class ReservationService {
     private Connection connection;
 
     public ReservationService(DatabaseManager db) {
-        // this.connection = db.getConnection();
         this.reservationDAO = db.getReservationDAO();
-        // this.allocationDAO = db.getAllocationDAO();
-        // this.equipmentDAO = db.getEquipmentDAO();
+        this.allocationDAO = db.getEquipmentAllocationDAO();
+        this.equipmentDAO = db.getEquipmentDAO();
         this.eventHallDAO = db.getEventHallDAO();
         this.eventHallService = new EventHallService(db);
+        this.connection = reservationDAO.getConnection();
     }
 
     public boolean createReservation(Reservation reservation, List<EquipmentAllocation> allocations) {

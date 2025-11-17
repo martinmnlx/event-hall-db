@@ -2,6 +2,7 @@ package com.infom.eventhall.dao;
 
 import com.infom.eventhall.model.Reservation;
 import com.infom.eventhall.model.User;
+import lombok.Getter;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class ReservationDAO {
 
+    @Getter
     private final Connection connection;
 
     public ReservationDAO(Connection connection) {
@@ -20,20 +22,30 @@ public class ReservationDAO {
         String sql = "INSERT INTO Reservations (user_id, hall_id, staff_id, created_on, event_date, event_type, guest_count, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         // sets all the ? parameters
-        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, reservation.getUserId());
             stmt.setInt(2, reservation.getHallId());
             stmt.setInt(3, reservation.getStaffId());
             stmt.setTimestamp(4, Timestamp.valueOf(reservation.getCreatedOn()));
-            stmt.setDate(5, java.sql.Date.valueOf(reservation.getEventDate()));
+            stmt.setDate(5, Date.valueOf(reservation.getEventDate()));
             stmt.setString(6, reservation.getEventType());
-            stmt.setInt(7, reservation.getGuessCount());
+            stmt.setInt(7, reservation.getGuestCount());
             stmt.setString(8, reservation.getStatus().name());
 
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
-        }
-        catch(SQLException e){
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) return false;
+
+            // get the generated ID
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    reservation.setReservationId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Creating reservation failed, no ID obtained.");
+                }
+            }
+
+            return true;
+        } catch(SQLException e){
             e.printStackTrace();
             return false;
         }
@@ -132,7 +144,7 @@ public class ReservationDAO {
             stmt.setInt(3, reservation.getStaffId());
             stmt.setDate(5, java.sql.Date.valueOf(reservation.getEventDate()));
             stmt.setString(6, reservation.getEventType());
-            stmt.setInt(7, reservation.getGuessCount());
+            stmt.setInt(7, reservation.getGuestCount());
             stmt.setString(8, reservation.getStatus().name());
             stmt.setInt(9, reservation.getReservationId());
 
@@ -193,7 +205,7 @@ public class ReservationDAO {
         reservation.setCreatedOn(rs.getTimestamp("created_on").toLocalDateTime());
         reservation.setEventDate(rs.getDate("event_date").toLocalDate());
         reservation.setEventType(rs.getString("event_type"));
-        reservation.setGuessCount(rs.getInt("guess_count"));
+        reservation.setGuestCount(rs.getInt("guest_count"));
         reservation.setStatus(Reservation.ReservationStatus.valueOf(rs.getString("status")));
         return reservation;
     }

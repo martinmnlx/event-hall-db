@@ -8,12 +8,12 @@ import com.infom.eventhall.model.EquipmentAllocation;
 import com.infom.eventhall.model.EventHall;
 
 import com.infom.eventhall.model.Reservation;
+import com.infom.eventhall.service.EventHallService;
 import com.infom.eventhall.service.ReservationService;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -21,12 +21,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+import java.util.List;
 
 public class ReserveUI extends JPanel {
 
     private final AppFrame app;
-
     private final ReservationService reservationService;
+    private final EventHallService eventHallService;
 
     private int hallID;
     private EventHall hall;
@@ -54,9 +55,10 @@ public class ReserveUI extends JPanel {
     private final JDatePanelImpl datePanel;
     private final JDatePickerImpl datePicker;
 
-    public ReserveUI(AppFrame app, ReservationService reservationService) {
+    public ReserveUI(AppFrame app, ReservationService r, EventHallService h) {
         this.app = app;
-        this.reservationService = reservationService;
+        this.reservationService = r;
+        this.eventHallService = h;
 
         UtilDateModel model = new UtilDateModel();
         model.setSelected(true); // sets today as default
@@ -230,13 +232,16 @@ public class ReserveUI extends JPanel {
         add(card);
         add(Box.createVerticalGlue());
 
-        confirmButton.addActionListener(e -> handleReservation());
+        confirmButton.addActionListener(e -> {
+            handleReservation();
+            app.showScreen("bookings");
+        });
         cancelButton.addActionListener(e -> app.showScreen("halls"));
     }
 
     public void refresh() {
         hallID = app.getHallsUI().getChosenHallID();
-        hall = app.getDb().getEventHallDAO().getHallById(hallID);
+        hall = eventHallService.getHallById(hallID);
 
         hallField.setText(hall.getHallName());
         locationField.setText(hall.getLocation());
@@ -257,15 +262,46 @@ public class ReserveUI extends JPanel {
 
         Reservation r = new Reservation();
         r.setHallId(hall.getHallId());
-        r.setUserId(app.getUser().getUserId());
+        r.setUserId(102);
         r.setStaffId(101);
         r.setCreatedOn(LocalDateTime.now());
         r.setEventDate(date);
         r.setEventType(type);
-        r.setGuessCount(guests);
-        r.setStatus(Reservation.ReservationStatus.Pending);
+        r.setGuestCount(guests);
+        r.setStatus(Reservation.ReservationStatus.Confirmed);
 
-        app.getDb().getReservationDAO().createReservation(r);
+        List<EquipmentAllocation> allocs = new ArrayList<>();
+
+        if (fogMachine.isSelected()) {
+            EquipmentAllocation alloc = new EquipmentAllocation();
+            alloc.setReservationId(0);
+            alloc.setEquipmentId(101);
+            alloc.setQuantityUsed(1);
+            allocs.add(alloc);
+        }
+        if (laserLights.isSelected()) {
+            EquipmentAllocation alloc = new EquipmentAllocation();
+            alloc.setReservationId(0);
+            alloc.setEquipmentId(102);
+            alloc.setQuantityUsed(1);
+            allocs.add(alloc);
+        }
+        if (karaoke.isSelected()) {
+            EquipmentAllocation alloc = new EquipmentAllocation();
+            alloc.setReservationId(0);
+            alloc.setEquipmentId(103);
+            alloc.setQuantityUsed(1);
+            allocs.add(alloc);
+        }
+        if (photoBooth.isSelected()) {
+            EquipmentAllocation alloc = new EquipmentAllocation();
+            alloc.setReservationId(0);
+            alloc.setEquipmentId(104);
+            alloc.setQuantityUsed(1);
+            allocs.add(alloc);
+        }
+
+        reservationService.createReservation(r, allocs);
     }
 
     private JCheckBox createCheckBox(String text) {
