@@ -6,6 +6,7 @@ import com.infom.eventhall.DatabaseManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -55,8 +56,14 @@ public class ReservationService {
                     throw new IllegalStateException("Equipment not found");
                 }
 
+                // checks how much equipment is booked for the day
+                int reservedEquipment = allocationDAO.getReservedQuantityForTheDay(allocation.getEquipmentId(), reservation.getEventDate());
+
+                // calculate how much stock is available left
+                int remainingStock = equipment.getQuantityTotal() - reservedEquipment;
+
                 // should now check if there is enough stock
-                if (allocation.getQuantityUsed() > equipment.getQuantityTotal()) {
+                if (allocation.getQuantityUsed() > remainingStock) {
                     throw new IllegalStateException("Not enough equipment quantity");
                 }
             }
@@ -98,6 +105,27 @@ public class ReservationService {
             }
         }
     }
+
+    public boolean cancelReservation(int reservationId) {
+        try{
+            // locate the reservation record
+            Reservation reservation = reservationDAO.getReservationById(reservationId);
+
+            if (reservation == null) {
+                throw new IllegalStateException("Reservation not found");
+            }
+            // update the reservation status
+            reservation.setStatus(Reservation.ReservationStatus.Cancelled);
+            // returns the changes to our database
+            return reservationDAO.updateReservation(reservation);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
     public Reservation getReservationById(int reservationId){
         return reservationDAO.getReservationById(reservationId);
