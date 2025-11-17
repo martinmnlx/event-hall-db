@@ -6,7 +6,6 @@ import com.infom.eventhall.DatabaseManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -115,7 +114,7 @@ public class ReservationService {
                 throw new IllegalStateException("Reservation not found");
             }
             // update the reservation status
-            reservation.setStatus(Reservation.ReservationStatus.Cancelled);
+            reservation.setStatus(Reservation.ReservationStatus.Canceled);
             // returns the changes to our database
             return reservationDAO.updateReservation(reservation);
         }

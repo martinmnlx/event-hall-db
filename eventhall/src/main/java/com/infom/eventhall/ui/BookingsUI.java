@@ -147,8 +147,7 @@ public class BookingsUI extends JPanel {
                 JLabel statusLabel = app.createLabel("Status: ", Color.BLACK, 16f, 2);
 
                 Color availColor = Color.BLACK;
-                if (reservation.getStatus().name().equals("Pending")) availColor = Color.ORANGE;
-                if (reservation.getStatus().name().equals("Confirmed")) availColor = Color.GREEN;
+                if (reservation.getStatus().name().equals("Confirmed")) availColor = Color.decode("#5BB450");
                 if (reservation.getStatus().name().equals("Canceled")) availColor = Color.RED;
                 if (reservation.getStatus().name().equals("Completed")) availColor = Color.BLUE;
 
@@ -156,9 +155,17 @@ public class BookingsUI extends JPanel {
 
                 JButton cancelButton = app.createButton("Cancel", Color.decode("#F94449"), 20f, false);
 
-                cancelButton.addActionListener(e -> {
-                    // app.showScreen("reserve");
-                });
+                if (reservation.getStatus() == Reservation.ReservationStatus.Canceled) {
+                    cancelButton.setEnabled(false);
+                    cancelButton.setBackground(Color.LIGHT_GRAY);
+                    cancelButton.setForeground(Color.WHITE);
+                    cancelButton.setText("Canceled");
+                } else {
+                    cancelButton.addActionListener(e -> {
+                        reservationService.cancelReservation(reservation.getReservationId());
+                        refresh();
+                    });
+                }
 
                 status.add(statusLabel);
                 status.add(availLabel);

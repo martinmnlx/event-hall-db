@@ -142,11 +142,11 @@ public class ReservationDAO {
             stmt.setInt(1, reservation.getUserId());
             stmt.setInt(2, reservation.getHallId());
             stmt.setInt(3, reservation.getStaffId());
-            stmt.setDate(5, java.sql.Date.valueOf(reservation.getEventDate()));
-            stmt.setString(6, reservation.getEventType());
-            stmt.setInt(7, reservation.getGuestCount());
-            stmt.setString(8, reservation.getStatus().name());
-            stmt.setInt(9, reservation.getReservationId());
+            stmt.setDate(4, java.sql.Date.valueOf(reservation.getEventDate()));
+            stmt.setString(5, reservation.getEventType());
+            stmt.setInt(6, reservation.getGuestCount());
+            stmt.setString(7, reservation.getStatus().name());
+            stmt.setInt(8, reservation.getReservationId());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
