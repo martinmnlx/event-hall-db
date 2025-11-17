@@ -124,7 +124,14 @@ public class RegisterUI extends JPanel {
                 warningLabel.setText("Email already in use!");
             } else {
                 userService.registerUser(name, email, phone, password);
-                app.getLoginUI().getWarningLabel().setText("Account registered! You may login now.");
+
+                JOptionPane.showMessageDialog(
+                        this, // parent component
+                        "Account registered successfully! You may login now.",
+                        "Registration Successful",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
                 app.showScreen("login");
             }
         }

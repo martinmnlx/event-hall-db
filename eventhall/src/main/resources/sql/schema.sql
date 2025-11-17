@@ -64,7 +64,7 @@ CREATE TABLE Reservations (
     reservation_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     hall_id INT NOT NULL,
-    staff_id INT NOT NULL,
+    staff_id INT,
     created_on DATETIME DEFAULT CURRENT_TIMESTAMP,
     event_date DATE,
     event_type VARCHAR(100),

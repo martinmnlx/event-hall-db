@@ -2,6 +2,7 @@ package com.infom.eventhall.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Collections;
 import java.util.List;
 
 import com.infom.eventhall.model.EventHall;
@@ -100,6 +101,8 @@ public class BookingsUI extends JPanel {
         if (app.getUser() != null) reservations = reservationService.getReservationByUserId(app.getUser().getUserId());
         else return;
 
+        Collections.reverse(reservations);
+
         bookingsPanel.removeAll();
 
         int reservationCount = 0;
@@ -162,8 +165,18 @@ public class BookingsUI extends JPanel {
                     cancelButton.setText("Canceled");
                 } else {
                     cancelButton.addActionListener(e -> {
-                        reservationService.cancelReservation(reservation.getReservationId());
-                        refresh();
+                        int confirm = JOptionPane.showConfirmDialog(
+                                null, // parent component, can use your frame or panel
+                                "Are you sure you want to cancel this reservation?",
+                                "Confirm Cancel",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.WARNING_MESSAGE
+                        );
+
+                        if (confirm == JOptionPane.YES_OPTION) {
+                            reservationService.cancelReservation(reservation.getReservationId());
+                            refresh();
+                        }
                     });
                 }
 

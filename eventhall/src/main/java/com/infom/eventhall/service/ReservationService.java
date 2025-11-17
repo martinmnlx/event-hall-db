@@ -124,7 +124,9 @@ public class ReservationService {
         }
     }
 
-
+    public List<Reservation> getAllReservations() {
+        return reservationDAO.getAllReservations();
+    }
 
     public Reservation getReservationById(int reservationId){
         return reservationDAO.getReservationById(reservationId);

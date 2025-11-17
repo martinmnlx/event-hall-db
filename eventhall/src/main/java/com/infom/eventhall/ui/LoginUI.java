@@ -1,5 +1,6 @@
 package com.infom.eventhall.ui;
 
+import com.infom.eventhall.model.User;
 import com.infom.eventhall.service.UserService;
 import lombok.Getter;
 
@@ -110,7 +111,8 @@ public class LoginUI extends JPanel {
 
         app.setUser(userService.authenticateUser(email, password));
         System.out.println("Username: " + app.getUser().getName());
-        app.showScreen("dashboard");
+        if (app.getUser().getType().equals(User.UserType.Customer)) app.showScreen("dashboard");
+        else app.showScreen("admin");
     }
 
 }

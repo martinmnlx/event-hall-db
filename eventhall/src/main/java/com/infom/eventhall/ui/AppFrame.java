@@ -33,6 +33,9 @@ public class AppFrame extends JFrame {
     private final EventHallService eventHallService;
     private final ReservationService reservationService;
 
+    // Admin UI
+    private final AdminUI adminUI;
+
     // Sign In/Up UI
     private final LoginUI loginUI;
     private final RegisterUI registerUI;
@@ -62,6 +65,7 @@ public class AppFrame extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
+        mainPanel.add(adminUI = new AdminUI(this, userService, staffService, eventHallService, reservationService), "admin");
         mainPanel.add(loginUI = new LoginUI(this, userService), "login");
         mainPanel.add(registerUI = new RegisterUI(this, userService), "register");
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");

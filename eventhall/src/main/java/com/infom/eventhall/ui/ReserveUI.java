@@ -233,9 +233,25 @@ public class ReserveUI extends JPanel {
         add(Box.createVerticalGlue());
 
         confirmButton.addActionListener(e -> {
-            handleReservation();
-            app.showScreen("bookings");
+            if (handleReservation()) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Reserved successfully! You may now track it on your booking history.",
+                        "Reservation Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                app.showScreen("bookings");
+            }
+            else {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Schedule conflict - Choose a different date.",
+                        "Reservation Error",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            }
         });
+
         cancelButton.addActionListener(e -> app.showScreen("halls"));
     }
 
@@ -252,7 +268,7 @@ public class ReserveUI extends JPanel {
         System.out.println("User chose hall: " + hall.getHallName());
     }
 
-    public void handleReservation() {
+    public boolean handleReservation() {
         Date selectedDate = (Date) datePicker.getModel().getValue(); // returns java.util.Date
         LocalDate date = selectedDate.toInstant()
                 .atZone(ZoneId.systemDefault())
@@ -262,7 +278,7 @@ public class ReserveUI extends JPanel {
 
         Reservation r = new Reservation();
         r.setHallId(hall.getHallId());
-        r.setUserId(102);
+        r.setUserId(app.getUser().getUserId());
         r.setStaffId(101);
         r.setCreatedOn(LocalDateTime.now());
         r.setEventDate(date);
@@ -301,7 +317,7 @@ public class ReserveUI extends JPanel {
             allocs.add(alloc);
         }
 
-        reservationService.createReservation(r, allocs);
+        return reservationService.createReservation(r, allocs);
     }
 
     private JCheckBox createCheckBox(String text) {
