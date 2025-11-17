@@ -17,7 +17,7 @@ public class ReservationDAO {
     }
 
     public boolean createReservation(Reservation reservation) {
-        String sql = "INSERT INTO Reservations (user_id, hall_id, staff_id, created_on, starts_on, ends_on, event_type, guest_count, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Reservations (user_id, hall_id, staff_id, created_on, event_date, event_type, guest_count, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         // sets all the ? parameters
         try (PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -25,8 +25,7 @@ public class ReservationDAO {
             stmt.setInt(2, reservation.getHallId());
             stmt.setInt(3, reservation.getStaffId());
             stmt.setTimestamp(4, Timestamp.valueOf(reservation.getCreatedOn()));
-            stmt.setTimestamp(5, Timestamp.valueOf(reservation.getStartsOn()));
-            stmt.setTimestamp(6, Timestamp.valueOf(reservation.getEndsOn()));
+            stmt.setDate(5, java.sql.Date.valueOf(reservation.getEventDate()));
             stmt.setString(7, reservation.getEventType());
             stmt.setInt(8, reservation.getGuessCount());
             stmt.setString(9, reservation.getStatus().name());
@@ -124,15 +123,14 @@ public class ReservationDAO {
     }
 
     public boolean updateReservation(Reservation reservation) {
-        String sql = "UPDATE Reservations SET user_id = ?, hall_id = ?, staff_id = ?, starts_on = ?, ends_on = ?, event_type = ?, guest_count = ?, status = ? WHERE reservation_id = ?";
+        String sql = "UPDATE Reservations SET user_id = ?, hall_id = ?, staff_id = ?, event_date = ?, event_type = ?, guest_count = ?, status = ? WHERE reservation_id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)){
 
             stmt.setInt(1, reservation.getUserId());
             stmt.setInt(2, reservation.getHallId());
             stmt.setInt(3, reservation.getStaffId());
-            stmt.setTimestamp(4, Timestamp.valueOf(reservation.getStartsOn()));
-            stmt.setTimestamp(5, Timestamp.valueOf(reservation.getEndsOn()));
+            stmt.setDate(5, java.sql.Date.valueOf(reservation.getEventDate()));
             stmt.setString(6, reservation.getEventType());
             stmt.setInt(7, reservation.getGuessCount());
             stmt.setString(8, reservation.getStatus().name());
@@ -194,8 +192,7 @@ public class ReservationDAO {
         reservation.setHallId(rs.getInt("hall_id"));
         reservation.setStaffId(rs.getInt("staff_id"));
         reservation.setCreatedOn(rs.getTimestamp("created_on").toLocalDateTime());
-        reservation.setStartsOn(rs.getTimestamp("starts_on").toLocalDateTime());
-        reservation.setEndsOn(rs.getTimestamp("ends_on").toLocalDateTime());
+        reservation.setEventDate(rs.getDate("event_date").toLocalDate());
         reservation.setEventType(rs.getString("event_type"));
         reservation.setGuessCount(rs.getInt("guess_count"));
         reservation.setStatus(Reservation.ReservationStatus.valueOf(rs.getString("status")));

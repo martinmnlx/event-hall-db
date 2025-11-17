@@ -2,6 +2,7 @@ package com.infom.eventhall.model;
 
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data // provides getters, setters, and constructors
 
@@ -12,8 +13,7 @@ public class Reservation {
     private Integer hallId; // Foreign Key
     private Integer staffId; // Foreign Key
     private LocalDateTime createdOn;
-    private LocalDateTime startsOn;
-    private LocalDateTime endsOn;
+    private LocalDate eventDate;
     private String eventType;
     private Integer guessCount;
     private ReservationStatus status;
