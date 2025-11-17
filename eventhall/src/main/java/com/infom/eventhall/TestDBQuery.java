@@ -20,20 +20,24 @@ public class TestDBQuery {
             // Create a statement
             Statement stmt = conn.createStatement();
 
+            System.out.println("-- Users Table --------------------");
+
             // Execute a query
-            String sql = "SELECT user_id, name, email, phone, created_on FROM Users";
+            String sql = "SELECT * FROM Users";
             ResultSet rs = stmt.executeQuery(sql);
 
-            // Print the results
             while (rs.next()) {
-                int id = rs.getInt("user_id");
-                String name = rs.getString("name");
-                String email = rs.getString("email");
-                String phone = rs.getString("phone");
-                Timestamp createdOn = rs.getTimestamp("created_on");
-
-                System.out.println("ID: " + id + ", Name: " + name + ", Email: " + email + ", Phone: " + phone + ", Created On: " + createdOn);
+                System.out.printf("%-5d %-10s %-20s %-30s %-15s %-20s%n",
+                        rs.getInt("user_id"),
+                        rs.getString("type"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("phone"),
+                        rs.getTimestamp("created_on"));
             }
+
+            System.out.println();
+            System.out.println("-- Event Halls Table --------------------");
 
             // Execute a query
             sql = "SELECT * FROM Event_Halls";
@@ -41,12 +45,11 @@ public class TestDBQuery {
 
             // Print the results
             while (rs.next()) {
-                int id = rs.getInt("hall_id");
-                String name = rs.getString("hall_name");
-                int capacity = rs.getInt("capacity");
-                String location = rs.getString("location");
-
-                System.out.println("ID: " + id + ", Name: " + name + ", Capacity: " + capacity + ", Location: " + location);
+                System.out.printf("%-5d %-30s %-10d %-15s%n",
+                        rs.getInt("hall_id"),
+                        rs.getString("hall_name"),
+                        rs.getInt("capacity"),
+                        rs.getString("location"));
             }
 
             // Close resources

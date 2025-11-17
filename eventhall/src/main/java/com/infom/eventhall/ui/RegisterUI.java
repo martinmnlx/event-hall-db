@@ -108,6 +108,7 @@ public class RegisterUI extends JPanel {
         });
 
         registerButton.addActionListener(e -> handleRegistration());
+        cancelButton.addActionListener(e -> app.showScreen("login"));
     }
 
     private void handleRegistration() {

@@ -9,6 +9,7 @@ import java.io.*;
 import com.infom.eventhall.DatabaseManager;
 import com.infom.eventhall.model.User;
 
+import com.infom.eventhall.service.ReservationService;
 import com.infom.eventhall.service.UserService;
 import lombok.Data;
 
@@ -25,6 +26,7 @@ public class AppFrame extends JFrame {
     private Font thinFont, regularFont, boldFont;
 
     private final UserService userService;
+    private final ReservationService reservationService;
 
     private final LoginUI loginUI;
     private final RegisterUI registerUI;
@@ -36,6 +38,7 @@ public class AppFrame extends JFrame {
         db = new DatabaseManager();
 
         userService = new UserService(db);
+        reservationService = new ReservationService(db);
 
         loadFonts();
 
@@ -52,7 +55,7 @@ public class AppFrame extends JFrame {
         mainPanel.add(registerUI = new RegisterUI(this, userService), "register");
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
         mainPanel.add(hallsUI = new HallsUI(this), "halls");
-        mainPanel.add(reserveUI = new ReserveUI(this), "reserve");
+        mainPanel.add(reserveUI = new ReserveUI(this, reservationService), "reserve");
 
         add(mainPanel);
 

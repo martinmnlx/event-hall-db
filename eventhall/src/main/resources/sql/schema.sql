@@ -89,35 +89,3 @@ CREATE TABLE Equipment_Allocations (
     FOREIGN KEY (equipment_id) REFERENCES Equipment(equipment_id)
         ON DELETE CASCADE
 ) AUTO_INCREMENT = 101;
-
--- ===============================
--- SAMPLE DATA INSERTION 
--- Can be updated and manipulates as project develops
--- ===============================
-
-INSERT INTO Users (type, name, email, phone, password)
-VALUES
-('Admin', 'admin', 'admin@email.com', '09981234567', 'password'),
-('Customer', 'Juan Dela Cruz', 'juan@email.com', '09171234567', 'password');
-
-INSERT INTO Event_Halls (hall_name, capacity, location, status)
-VALUES
-('Azure Grand Hall', 250, 'Pasig City', 'Available'),
-('Crystal Event Center', 300, 'Taguig City', 'Available'),
-('Emerald Function Hall', 100, 'Mandaluyong City', 'Maintenance'),
-('Golden Gate Hall', 180, 'Taguig City', 'Available'),
-('Grand Vista Hall', 200, 'Makati City', 'Available'),
-('Royal Orchid Hall', 200, 'Mandaluyong City', 'Available'),
-('Sapphire Banquet Hall', 220, 'Pasig City', 'Maintenance'),
-('Sunshine Ballroom', 150, 'Quezon City', 'Available'),
-('Amethyst Pavilion', 130, 'Makati City', 'Available'),
-('Diamond Atrium', 280, 'Pasig City', 'Available'),
-('Pearl Heritage Hall', 160, 'Taguig City', 'Maintenance'),
-('Ruby Celebration Hall', 190, 'Quezon City', 'Available');
-
-INSERT INTO Equipment (equipment_name, quantity_total)
-VALUES
-('Projector', 10),
-('Sound System', 5),
-('Table', 50),
-('Chair', 200);

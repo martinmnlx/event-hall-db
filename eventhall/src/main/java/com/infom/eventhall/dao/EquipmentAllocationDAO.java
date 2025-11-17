@@ -17,13 +17,12 @@ public class EquipmentAllocationDAO {
     }
 
     public boolean createAllocation(EquipmentAllocation allocation) {
-        String sql = "INSERT INTO Equipment_Allocations (reservation_id, equipment_id, quantity_used) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Equipment_Allocations (reservation_id, equipment_id) VALUES (?, ?)";
 
         // sets all the ? parameters
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, allocation.getReservationId());
             stmt.setInt(2, allocation.getEquipmentId());
-            stmt.setInt(3, allocation.getQuantityUsed());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -87,13 +86,12 @@ public class EquipmentAllocationDAO {
     }
 
     public boolean updateAllocation(EquipmentAllocation allocation) {
-        String sql = "UPDATE Equipment_Allocations SET reservation_id = ?, equipment_id = ?, quantity_used = ? WHERE allocation_id = ?";
+        String sql = "UPDATE Equipment_Allocations SET reservation_id = ?, equipment_id = ? WHERE allocation_id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)){
 
             stmt.setInt(1, allocation.getReservationId());
             stmt.setInt(2, allocation.getEquipmentId());
-            stmt.setInt(3, allocation.getQuantityUsed());
             stmt.setInt(4, allocation.getAllocationId());
 
             int rowsAffected = stmt.executeUpdate();
@@ -125,7 +123,6 @@ public class EquipmentAllocationDAO {
         allocation.setAllocationId(rs.getInt("allocation_id"));
         allocation.setReservationId(rs.getInt("reservation_id"));
         allocation.setEquipmentId(rs.getInt("equipment_id"));
-        allocation.setQuantityUsed(rs.getInt("quantity_used"));
         return allocation;
     }
 }

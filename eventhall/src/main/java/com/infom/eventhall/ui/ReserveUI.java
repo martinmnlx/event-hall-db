@@ -4,20 +4,29 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import com.infom.eventhall.model.EquipmentAllocation;
 import com.infom.eventhall.model.EventHall;
 
+import com.infom.eventhall.model.Reservation;
+import com.infom.eventhall.service.ReservationService;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Properties;
+import java.time.*;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Properties;
 
 public class ReserveUI extends JPanel {
 
     private final AppFrame app;
+
+    private final ReservationService reservationService;
 
     private int hallID;
     private EventHall hall;
@@ -36,8 +45,18 @@ public class ReserveUI extends JPanel {
     private final JButton confirmButton;
     private final JButton cancelButton;
 
-    public ReserveUI(AppFrame app) {
+    private ArrayList<JCheckBox> boxes;
+    private final JCheckBox fogMachine;
+    private final JCheckBox laserLights;
+    private final JCheckBox karaoke;
+    private final JCheckBox photoBooth;
+
+    private final JDatePanelImpl datePanel;
+    private final JDatePickerImpl datePicker;
+
+    public ReserveUI(AppFrame app, ReservationService reservationService) {
         this.app = app;
+        this.reservationService = reservationService;
 
         UtilDateModel model = new UtilDateModel();
         model.setSelected(true); // sets today as default
@@ -47,8 +66,8 @@ public class ReserveUI extends JPanel {
         p.put("text.month", "Month");
         p.put("text.year", "Year");
 
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new JFormattedTextField.AbstractFormatter() {
+        datePanel = new JDatePanelImpl(model, p);
+        datePicker = new JDatePickerImpl(datePanel, new JFormattedTextField.AbstractFormatter() {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             @Override
             public Object stringToValue(String text) throws ParseException { return df.parse(text); }
@@ -97,7 +116,7 @@ public class ReserveUI extends JPanel {
         typeLabel = app.createLabel("Select Event Type", Color.BLACK, 20f, 2);
         typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        guestLabel = app.createLabel("Enter Number of Guests", Color.BLACK, 20f, 2);
+        guestLabel = app.createLabel("Enter Guest Count", Color.BLACK, 20f, 2);
         guestLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         dateLabel = app.createLabel("Select Event Date", Color.BLACK, 20f, 2);
@@ -171,10 +190,16 @@ public class ReserveUI extends JPanel {
         // Add checkboxes (or other components) inside a vertical BoxLayout panel
         JPanel checkBoxPanel = new JPanel();
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
-        checkBoxPanel.add(createCheckBox("Fog Machine"));
-        checkBoxPanel.add(createCheckBox("Laser Lights"));
-        checkBoxPanel.add(createCheckBox("Karaoke System"));
-        checkBoxPanel.add(createCheckBox("Photo Booth"));
+        checkBoxPanel.add(fogMachine = createCheckBox("Fog Machine"));
+        checkBoxPanel.add(laserLights = createCheckBox("Laser Lights"));
+        checkBoxPanel.add(karaoke = createCheckBox("Karaoke System"));
+        checkBoxPanel.add(photoBooth = createCheckBox("Photo Booth"));
+
+        boxes = new ArrayList<>();
+        boxes.add(fogMachine);
+        boxes.add(laserLights);
+        boxes.add(karaoke);
+        boxes.add(photoBooth);
 
         equipmentPanel.add(checkBoxPanel);
 
@@ -223,7 +248,24 @@ public class ReserveUI extends JPanel {
     }
 
     public void handleReservation() {
+        Date selectedDate = (Date) datePicker.getModel().getValue(); // returns java.util.Date
+        LocalDate date = selectedDate.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        String type = (String) typeDropdown.getSelectedItem();
+        int guests = (int) guestSpinner.getValue();
 
+        Reservation r = new Reservation();
+        r.setHallId(hall.getHallId());
+        r.setUserId(102);
+        r.setStaffId(101);
+        r.setCreatedOn(LocalDateTime.now());
+        r.setEventDate(date);
+        r.setEventType(type);
+        r.setGuessCount(guests);
+        r.setStatus(Reservation.ReservationStatus.Pending);
+
+        app.getDb().getReservationDAO().createReservation(r);
     }
 
     private JCheckBox createCheckBox(String text) {
