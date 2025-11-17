@@ -1,6 +1,7 @@
 package com.infom.eventhall.ui;
 
 import com.infom.eventhall.service.UserService;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,7 @@ public class LoginUI extends JPanel {
     private final JPasswordField passwordField;
     private final JButton loginButton;
     private final JButton registerButton;
+    @Getter
     private JLabel warningLabel;
 
     public LoginUI(AppFrame app, UserService userService) {
@@ -111,8 +113,5 @@ public class LoginUI extends JPanel {
         app.showScreen("dashboard");
     }
 
-    public JLabel getWarningLabel() {
-        return warningLabel;
-    }
 }
 

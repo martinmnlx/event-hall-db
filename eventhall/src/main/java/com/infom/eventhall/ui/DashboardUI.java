@@ -11,7 +11,7 @@ public class DashboardUI extends JPanel {
     private final JLabel welcomeLabel;
     private final JLabel nameLabel;
     private final JLabel exclamLabel;
-    private final JButton reservationsButton;
+    private final JButton bookingsButton;
     private final JButton hallsButton;
     private final JButton profileButton;
     private final JButton logoutButton;
@@ -40,8 +40,8 @@ public class DashboardUI extends JPanel {
         welcomeLayout.add(nameLabel);
         welcomeLayout.add(exclamLabel);
 
-        reservationsButton = app.createButton("View Your Current Bookings", Color.BLUE, 24f, false);
-        reservationsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bookingsButton = app.createButton("View Your Current Bookings", Color.BLUE, 24f, false);
+        bookingsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         hallsButton = app.createButton("Browse Event Halls", Color.BLUE, 24f, false);
         hallsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -57,7 +57,7 @@ public class DashboardUI extends JPanel {
         add(Box.createVerticalStrut(20));
         add(welcomeLayout);
         add(Box.createVerticalStrut(60));
-        add(reservationsButton);
+        add(bookingsButton);
         add(Box.createVerticalStrut(20));
         add(hallsButton);
         add(Box.createVerticalStrut(20));
@@ -65,6 +65,8 @@ public class DashboardUI extends JPanel {
         add(Box.createVerticalStrut(40));
         add(logoutButton);
         add(Box.createVerticalGlue());
+
+        bookingsButton.addActionListener(e -> app.showScreen("bookings"));
 
         hallsButton.addActionListener(e -> app.showScreen("halls"));
 

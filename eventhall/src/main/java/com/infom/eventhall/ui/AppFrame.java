@@ -7,9 +7,12 @@ import java.sql.*;
 import java.io.*;
 
 import com.infom.eventhall.DatabaseManager;
+import com.infom.eventhall.model.EventHall;
 import com.infom.eventhall.model.User;
 
+import com.infom.eventhall.service.EventHallService;
 import com.infom.eventhall.service.ReservationService;
+import com.infom.eventhall.service.StaffService;
 import com.infom.eventhall.service.UserService;
 import lombok.Data;
 
@@ -26,18 +29,26 @@ public class AppFrame extends JFrame {
     private Font thinFont, regularFont, boldFont;
 
     private final UserService userService;
+    private final StaffService staffService;
+    private final EventHallService eventHallService;
     private final ReservationService reservationService;
 
+    // Sign In/Up UI
     private final LoginUI loginUI;
     private final RegisterUI registerUI;
+
+    // Customer UI
     private final DashboardUI dashboardUI;
     private final HallsUI hallsUI;
     private final ReserveUI reserveUI;
+    private final BookingsUI bookingsUI;
 
     public AppFrame() {
         db = new DatabaseManager();
 
         userService = new UserService(db);
+        staffService = new StaffService(db);
+        eventHallService = new EventHallService(db);
         reservationService = new ReservationService(db);
 
         loadFonts();
@@ -56,6 +67,7 @@ public class AppFrame extends JFrame {
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
         mainPanel.add(hallsUI = new HallsUI(this), "halls");
         mainPanel.add(reserveUI = new ReserveUI(this, reservationService), "reserve");
+        mainPanel.add(bookingsUI = new BookingsUI(this, reservationService, eventHallService, userService, staffService), "bookings");
 
         add(mainPanel);
 
@@ -69,6 +81,7 @@ public class AppFrame extends JFrame {
 
         switch (name) {
             case "dashboard" -> dashboardUI.refresh();
+            case "bookings" -> bookingsUI.refresh();
             case "reserve" -> reserveUI.refresh();
         }
 

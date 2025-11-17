@@ -11,7 +11,7 @@ public class StaffService {
     private StaffDAO staffDAO;
 
     public StaffService(DatabaseManager db) {
-        //this.staffDAO = db.getStaffDAO();
+        this.staffDAO = db.getStaffDAO();
     }
 
     public Staff getStaffById(int staffId){

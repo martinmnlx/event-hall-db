@@ -34,6 +34,8 @@ public class EventHallService {
         return availableEventHalls;
     }
 
+    public EventHall getHallById(int id) { return eventHallDAO.getHallById(id); }
+
     public EventHall getHallByName(String name) {
         return eventHallDAO.getHallByName(name);
     }

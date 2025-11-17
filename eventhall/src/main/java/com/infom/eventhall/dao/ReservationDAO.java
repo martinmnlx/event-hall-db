@@ -193,7 +193,7 @@ public class ReservationDAO {
         reservation.setCreatedOn(rs.getTimestamp("created_on").toLocalDateTime());
         reservation.setEventDate(rs.getDate("event_date").toLocalDate());
         reservation.setEventType(rs.getString("event_type"));
-        reservation.setGuessCount(rs.getInt("guess_count"));
+        reservation.setGuessCount(rs.getInt("guest_count"));
         reservation.setStatus(Reservation.ReservationStatus.valueOf(rs.getString("status")));
         return reservation;
     }
