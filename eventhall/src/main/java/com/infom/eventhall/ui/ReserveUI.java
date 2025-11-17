@@ -257,7 +257,7 @@ public class ReserveUI extends JPanel {
 
         Reservation r = new Reservation();
         r.setHallId(hall.getHallId());
-        r.setUserId(102);
+        r.setUserId(app.getUser().getUserId());
         r.setStaffId(101);
         r.setCreatedOn(LocalDateTime.now());
         r.setEventDate(date);

@@ -1,7 +1,5 @@
 package com.infom.eventhall.ui;
 
-import com.infom.eventhall.dao.DashboardDAO;
-
 import javax.swing.*;
 import java.awt.*;
 
