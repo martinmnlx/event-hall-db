@@ -4,7 +4,6 @@ import com.infom.eventhall.dao.*;
 
 import java.sql.*;
 
-import com.infom.eventhall.model.EquipmentAllocation;
 import lombok.Data;
 
 @Data
@@ -19,6 +18,7 @@ public class DatabaseManager {
     private ReservationDAO reservationDAO;
     private EquipmentDAO equipmentDAO;
     private EquipmentAllocationDAO equipmentAllocationDAO;
+    private ReportDAO reportDAO;
 
     public DatabaseManager() {
         connectToDatabase();
@@ -45,5 +45,6 @@ public class DatabaseManager {
         reservationDAO = new ReservationDAO(connection);
         equipmentDAO = new EquipmentDAO(connection);
         equipmentAllocationDAO = new EquipmentAllocationDAO(connection);
+        reportDAO = new ReportDAO(connection);
     }
 }

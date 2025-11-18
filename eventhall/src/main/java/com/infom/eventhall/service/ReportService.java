@@ -10,7 +10,7 @@ public class ReportService {
     private ReportDAO reportDAO;
 
     public ReportService(DatabaseManager db) {
-        // this.reportDAO = db.getReportDAO();
+        this.reportDAO = db.getReportDAO();
     }
 
     public Map<Integer, Integer> getMonthlyReservationPerHall(int month, int year) {

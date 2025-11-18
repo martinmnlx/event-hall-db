@@ -134,6 +134,7 @@ public class RecordsUI extends JPanel {
             case "Event Halls" -> new EventHallForm(app, eventHallService, null).setVisible(true);
             case "Equipment" -> new EquipmentForm(app, equipmentService, null).setVisible(true);
             case "Reservations" -> new ReservationForm(app, reservationService, null, eventHallService, userService, staffService).setVisible(true);
+            case "Equipment Allocations" -> new EquipmentAllocationForm(app, equipmentAllocationService, null, reservationService, equipmentService, eventHallService).setVisible(true);
         }
         refresh();
     }
@@ -165,6 +166,10 @@ public class RecordsUI extends JPanel {
             case "Reservations" -> {
                 int resId = (int) model.getValueAt(row, 0);
                 new ReservationForm(app, reservationService, reservationService.getReservationById(resId), eventHallService, userService, staffService).setVisible(true);
+            }
+            case "Equipment Allocations" -> {
+                int allocId = (int) model.getValueAt(row, 0);
+                new EquipmentAllocationForm(app, equipmentAllocationService, equipmentAllocationService.getAllocationById(allocId), reservationService, equipmentService, eventHallService).setVisible(true);
             }
         }
         refresh();
