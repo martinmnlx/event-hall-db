@@ -34,6 +34,8 @@ public class HallsUI extends JPanel {
     private List<String> cities;
 
     private final JDatePanelImpl datePanel;
+
+    @Getter
     private final JDatePickerImpl datePicker;
 
     @Getter
@@ -160,7 +162,10 @@ public class HallsUI extends JPanel {
         statusDropdown.addActionListener(e -> refresh());
 
         dashboardButton.addActionListener(e -> app.showScreen("dashboard"));
-        datePicker.addActionListener(e -> refresh());
+        datePicker.addActionListener(e -> {
+            app.getReserveUI().setBookingDate((Date) datePicker.getModel().getValue());
+            refresh();
+        });
 
         refresh();
     }

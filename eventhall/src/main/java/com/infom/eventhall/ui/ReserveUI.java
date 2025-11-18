@@ -52,6 +52,7 @@ public class ReserveUI extends JPanel {
     private final JCheckBox karaoke;
     private final JCheckBox photoBooth;
 
+    private final UtilDateModel model;
     private final JDatePanelImpl datePanel;
     private final JDatePickerImpl datePicker;
 
@@ -60,8 +61,8 @@ public class ReserveUI extends JPanel {
         this.reservationService = r;
         this.eventHallService = h;
 
-        UtilDateModel model = new UtilDateModel();
-        model.setSelected(true); // sets today as default
+        model = new UtilDateModel();
+        model.setSelected(true);
 
         Properties p = new Properties();
         p.put("text.today", "Today");
@@ -329,5 +330,9 @@ public class ReserveUI extends JPanel {
         cb.setMargin(new Insets(4, 8, 4, 8));
 
         return cb;
+    }
+
+    public void setBookingDate(Date date) {
+        model.setValue(date);
     }
 }

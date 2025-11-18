@@ -80,7 +80,7 @@ public class AppFrame extends JFrame {
 
         setVisible(true);
 
-        showScreen("halls");
+        showScreen("login");
     }
 
     public void showScreen(String name) {
