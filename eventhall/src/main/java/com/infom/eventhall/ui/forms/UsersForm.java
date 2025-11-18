@@ -21,7 +21,7 @@ public class UsersForm extends JDialog {
     private JButton cancelButton;
 
     public UsersForm(Frame owner, UserService userService, User user) {
-        super(owner, true); // modal
+        super(owner, true);
         this.userService = userService;
         this.user = user;
 
