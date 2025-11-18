@@ -70,7 +70,7 @@ public class ReserveUI extends JPanel {
 
         datePanel = new JDatePanelImpl(model, p);
         datePicker = new JDatePickerImpl(datePanel, new JFormattedTextField.AbstractFormatter() {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
             @Override
             public Object stringToValue(String text) throws ParseException { return df.parse(text); }
             @Override
@@ -233,7 +233,9 @@ public class ReserveUI extends JPanel {
         add(Box.createVerticalGlue());
 
         confirmButton.addActionListener(e -> {
-            if (handleReservation()) {
+            ReservationService.ReservationResult result = handleReservation();
+
+            if (result.isSuccess()) {
                 JOptionPane.showMessageDialog(
                         null,
                         "Reserved successfully! You may now track it on your booking history.",
@@ -245,7 +247,7 @@ public class ReserveUI extends JPanel {
             else {
                 JOptionPane.showMessageDialog(
                         null,
-                        "Schedule conflict - Choose a different date.",
+                        result.getMessage(),
                         "Reservation Error",
                         JOptionPane.WARNING_MESSAGE
                 );
@@ -268,11 +270,9 @@ public class ReserveUI extends JPanel {
         System.out.println("User chose hall: " + hall.getHallName());
     }
 
-    public boolean handleReservation() {
-        Date selectedDate = (Date) datePicker.getModel().getValue(); // returns java.util.Date
-        LocalDate date = selectedDate.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+    public ReservationService.ReservationResult handleReservation() {
+        Date selectedDate = (Date) datePicker.getModel().getValue();
+        LocalDate date = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String type = (String) typeDropdown.getSelectedItem();
         int guests = (int) guestSpinner.getValue();
 

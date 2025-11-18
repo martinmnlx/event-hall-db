@@ -80,7 +80,7 @@ public class AppFrame extends JFrame {
 
         setVisible(true);
 
-        showScreen("admin");
+        showScreen("halls");
     }
 
     public void showScreen(String name) {
@@ -89,8 +89,10 @@ public class AppFrame extends JFrame {
         switch (name) {
             case "dashboard" -> dashboardUI.refresh();
             case "bookings" -> bookingsUI.refresh();
+            case "halls" -> hallsUI.refresh();
             case "reserve" -> reserveUI.refresh();
             case "admin" -> adminUI.refresh();
+            case "records" -> recordsUI.refresh();
         }
 
         System.out.println("Panel changed: " + name);

@@ -48,6 +48,12 @@ public class EventHallService {
         return eventHallDAO.getHallByLocation(location);
     }
 
+    public boolean isHallAvailableOnDate(EventHall hall, LocalDate date) {
+        List<EventHall> availableHalls = findAllAvailableEventHalls(date);
+
+        return availableHalls.stream().anyMatch(h -> h.getHallId() == hall.getHallId());
+    }
+
     public List<EventHall> getAllEventHalls() {
         return eventHallDAO.getAllEventHalls();
     }

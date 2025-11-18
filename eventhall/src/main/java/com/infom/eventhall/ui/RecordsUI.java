@@ -58,7 +58,7 @@ public class RecordsUI extends JPanel {
         ((JLabel) recordsDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         recordsDropdown.addActionListener(e -> {
             currentRecord = (String) recordsDropdown.getSelectedItem();
-            refreshTable();
+            refresh();
         });
         currentRecord = (String) recordsDropdown.getSelectedItem(); // initial value
 
@@ -101,10 +101,7 @@ public class RecordsUI extends JPanel {
         createButton.addActionListener(e -> openCreateForm());
         updateButton.addActionListener(e -> openUpdateForm());
         deleteButton.addActionListener(e -> deleteSelectedRecord());
-        logoutButton.addActionListener(e -> {
-            app.setUser(null);
-            app.showScreen("admin");
-        });
+        logoutButton.addActionListener(e -> app.showScreen("admin"));
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
@@ -127,7 +124,7 @@ public class RecordsUI extends JPanel {
         add(buttonPanel);
         add(Box.createVerticalStrut(40));
 
-        refreshTable();
+        refresh();
     }
 
     private void openCreateForm() {
@@ -138,7 +135,7 @@ public class RecordsUI extends JPanel {
             case "Equipment" -> new EquipmentForm(app, equipmentService, null).setVisible(true);
             case "Reservations" -> new ReservationForm(app, reservationService, null, eventHallService, userService, staffService).setVisible(true);
         }
-        refreshTable();
+        refresh();
     }
 
     private void openUpdateForm() {
@@ -170,7 +167,7 @@ public class RecordsUI extends JPanel {
                 new ReservationForm(app, reservationService, reservationService.getReservationById(resId), eventHallService, userService, staffService).setVisible(true);
             }
         }
-        refreshTable();
+        refresh();
     }
 
     private void deleteSelectedRecord() {
@@ -193,7 +190,7 @@ public class RecordsUI extends JPanel {
                 case "Equipment" -> equipmentService.deleteEquipment((int) model.getValueAt(row, 0));
                 case "Reservations" -> reservationService.deleteReservation((int) model.getValueAt(row, 0));
             }
-            refreshTable();
+            refresh();
             JOptionPane.showMessageDialog(this, "Deleted successfully!");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -201,7 +198,7 @@ public class RecordsUI extends JPanel {
     }
 
     // -------------------- REFRESH TABLE --------------------
-    private void refreshTable() {
+    public void refresh() {
         switch (currentRecord) {
             case "Users" -> showUsersTable();
             case "Staff" -> showStaffTable();

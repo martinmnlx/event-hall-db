@@ -28,80 +28,59 @@ public class ReservationService {
         this.connection = reservationDAO.getConnection();
     }
 
-    public boolean createReservation(Reservation reservation, List<EquipmentAllocation> allocations) {
+    public ReservationResult createReservation(Reservation reservation, List<EquipmentAllocation> allocations) {
 
         try {
-            // so that it only saves when we complete the whole process
             connection.setAutoCommit(false);
 
-            //Checks for availableHalls
+            //Check hall availability
             List<EventHall> availableEventHalls = eventHallService.findAllAvailableEventHalls(reservation.getEventDate());
+            boolean isAvailable = availableEventHalls.stream()
+                    .anyMatch(h -> h.getHallId().equals(reservation.getHallId()));
 
-            boolean isAvailable = false;
-            for (EventHall eventHall : availableEventHalls) {
-                if (eventHall.getHallId().equals(reservation.getHallId())) {
-                    isAvailable = true;
-                    break;
-                }
-            }
             if (!isAvailable) {
-                throw new IllegalStateException("Event hall is not available");
+                throw new IllegalStateException("Event hall has already been reserved on the chosen date.");
             }
 
-            // now checks for equipment availability
+            //Check equipment availability
             for (EquipmentAllocation allocation : allocations) {
                 Equipment equipment = equipmentDAO.getEquipmentById(allocation.getEquipmentId());
                 if (equipment == null) {
-                    throw new IllegalStateException("Equipment not found");
+                    throw new IllegalStateException("Equipment not found: " + allocation.getEquipmentId());
                 }
 
-                // checks how much equipment is booked for the day
                 int reservedEquipment = allocationDAO.getReservedQuantityForTheDay(allocation.getEquipmentId(), reservation.getEventDate());
-
-                // calculate how much stock is available left
                 int remainingStock = equipment.getQuantityTotal() - reservedEquipment;
 
-                // should now check if there is enough stock
                 if (allocation.getQuantityUsed() > remainingStock) {
-                    throw new IllegalStateException("Not enough equipment quantity");
+                    throw new IllegalStateException("All " + equipmentDAO.getEquipmentById(allocation.getEquipmentId()).getEquipmentName() + " quantity have been reserved on the chosen date.");
                 }
             }
 
-            // set the time reservation is created
             reservation.setCreatedOn(LocalDateTime.now());
-            boolean reservationCreated = reservationDAO.createReservation(reservation);
-
-            if (!reservationCreated) {
+            if (!reservationDAO.createReservation(reservation)) {
                 throw new IllegalStateException("Unable to create reservation");
             }
 
-            // saving the allocation of equipment
-            for  (EquipmentAllocation allocation : allocations) {
+            for (EquipmentAllocation allocation : allocations) {
                 allocation.setReservationId(reservation.getReservationId());
                 if (!allocationDAO.createAllocation(allocation)) {
                     throw new IllegalStateException("Unable to create allocation");
                 }
             }
-            // this will commit the changes to create the booking
+
             connection.commit();
-            return true;
-    } catch (Exception e) {
-            e.printStackTrace();
-            // if any error occurs we roll back all changes
-            try {
-                connection.rollback();
-            }
-            catch (SQLException se) {
-                se.printStackTrace();
-            }
-            return false;
+            return new ReservationResult(true, "Reservation created successfully");
+
+        } catch (Exception e) {
+
+            // Rollback
+            try { connection.rollback(); } catch (SQLException ignore) {}
+
+            return new ReservationResult(false, e.getMessage());
+
         } finally {
-            // always set auto-commit back to true for other operations
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            try { connection.setAutoCommit(true); } catch (SQLException ignore) {}
         }
     }
 
@@ -146,5 +125,18 @@ public class ReservationService {
 
     public List<Reservation> getReservationByHallId(int hallId) {
         return reservationDAO.getReservationByHallId(hallId);
+    }
+
+    public class ReservationResult {
+        private boolean success;
+        private String message;
+
+        public ReservationResult(boolean success, String message) {
+            this.success = success;
+            this.message = message;
+        }
+
+        public boolean isSuccess() { return success; }
+        public String getMessage() { return message; }
     }
 }

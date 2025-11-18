@@ -2,11 +2,21 @@ package com.infom.eventhall.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date; // Import added
+import java.util.Calendar; // Import added
 import java.util.List;
+import java.util.Properties;
 
 import com.infom.eventhall.model.EventHall;
 import com.infom.eventhall.service.EventHallService;
 import lombok.Getter;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 public class HallsUI extends JPanel {
 
@@ -23,6 +33,9 @@ public class HallsUI extends JPanel {
     private List<EventHall> halls;
     private List<String> cities;
 
+    private final JDatePanelImpl datePanel;
+    private final JDatePickerImpl datePicker;
+
     @Getter
     private int chosenHallID = 0;
 
@@ -37,7 +50,7 @@ public class HallsUI extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        JLabel titleLabel = app.createLabel("Event Halls", Color.BLUE, 60f, 3);
+        JLabel titleLabel = app.createLabel("Browse Event Halls", Color.BLUE, 60f, 3);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel filterPanel = new JPanel();
@@ -52,18 +65,55 @@ public class HallsUI extends JPanel {
         cityDropdown.setBackground(Color.WHITE);
         ((JLabel) cityDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
+        // --- Capacity Spinner ---
         minCapacity = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 10));
-        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) minCapacity.getEditor();
-        editor.getTextField().setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-        editor.getTextField().setFont(app.getRegularFont().deriveFont(14f));
+        JSpinner.DefaultEditor capEditor = (JSpinner.DefaultEditor) minCapacity.getEditor();
+        capEditor.getTextField().setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        capEditor.getTextField().setFont(app.getRegularFont().deriveFont(14f));
+
+        // --- Date Picker ---
+        UtilDateModel model = new UtilDateModel();
+        model.setSelected(true);
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+
+        datePanel = new JDatePanelImpl(model, p);
+        datePicker = new JDatePickerImpl(datePanel, new JFormattedTextField.AbstractFormatter() {
+            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            @Override
+            public Object stringToValue(String text) throws ParseException { return df.parse(text); }
+            @Override
+            public String valueToString(Object value) {
+                if (value != null) return df.format(((Calendar)value).getTime());
+                return "";
+            }
+        });
+
+        JFormattedTextField tf = datePicker.getJFormattedTextField();
+        tf.setPreferredSize(new Dimension(120, 32));
+        tf.setFont(app.getRegularFont().deriveFont(14f));
+        tf.setMargin(new Insets(4, 4, 4, 4));
+        tf.setBackground(Color.WHITE);
+
+        Component btn = null;
+        if (datePicker.getComponentCount() > 1) btn = datePicker.getComponent(1);
+        if (btn != null) {
+            btn.setPreferredSize(new Dimension(30, 32));
+        }
 
         statusDropdown = new JComboBox<>(new String[]{"All", "Available", "Maintenance"});
         statusDropdown.setFont(app.getRegularFont().deriveFont(14f));
         statusDropdown.setBackground(Color.WHITE);
         ((JLabel) statusDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
+        // --- Add Components to Filter Panel ---
         filterPanel.add(app.createLabel("Name: ", Color.BLACK, 16f, 2));
         filterPanel.add(nameSearch);
+        filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        filterPanel.add(app.createLabel("Date: ", Color.BLACK, 16f, 2));
+        filterPanel.add(datePicker);
         filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         filterPanel.add(app.createLabel("Min. Capacity: ", Color.BLACK, 16f, 2));
         filterPanel.add(minCapacity);
@@ -97,25 +147,25 @@ public class HallsUI extends JPanel {
         add(dashboardButton);
         add(Box.createVerticalStrut(40));
 
-        cityDropdown.addActionListener(e -> refreshHalls());
+        // --- Listeners ---
+        cityDropdown.addActionListener(e -> refresh());
 
         nameSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { refreshHalls(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { refreshHalls(); }
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { refreshHalls(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { refresh(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { refresh(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { refresh(); }
         });
 
-        minCapacity.addChangeListener(e -> refreshHalls());
-
-        statusDropdown.addActionListener(e -> refreshHalls());
+        minCapacity.addChangeListener(e -> refresh());
+        statusDropdown.addActionListener(e -> refresh());
 
         dashboardButton.addActionListener(e -> app.showScreen("dashboard"));
+        datePicker.addActionListener(e -> refresh());
 
-        refreshHalls();
+        refresh();
     }
 
-    // Refresh hall cards dynamically
-    public void refreshHalls() {
+    public void refresh() {
         hallsPanel.removeAll();
 
         int hallCount = 0;
@@ -124,15 +174,18 @@ public class HallsUI extends JPanel {
         String searchText = nameSearch.getText().toLowerCase();
         int minCap = (int) minCapacity.getValue();
         String selectedStatus = (String) statusDropdown.getSelectedItem();
+        Date selectedDate = (Date) datePicker.getModel().getValue();
+        LocalDate date = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         for (EventHall hall : halls) {
             boolean matchesCity = selectedCity.equals("All") || hall.getLocation().equals(selectedCity);
             boolean matchesName = hall.getHallName().toLowerCase().contains(searchText);
             boolean matchesCapacity = hall.getCapacity() >= minCap;
             boolean matchesStatus = selectedStatus.equals("All") || hall.getStatus().name().equals(selectedStatus);
+            boolean isMaintenance = hall.getStatus().name().equals("Maintenance");
+            boolean matchesDate = eventHallService.isHallAvailableOnDate(hall, date);
 
-            if (matchesCity && matchesName && matchesCapacity && matchesStatus) {
-                // --- Card panel ---
+            if (matchesCity && matchesName && matchesCapacity && matchesStatus && (matchesDate || isMaintenance)) {
                 JPanel hallCard = new JPanel();
                 hallCard.setLayout(new BoxLayout(hallCard, BoxLayout.X_AXIS));
                 hallCard.setAlignmentX(Component.CENTER_ALIGNMENT);

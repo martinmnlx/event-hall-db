@@ -161,26 +161,26 @@ public class BookingsUI extends JPanel {
 
                 JButton cancelButton = app.createButton("Cancel", Color.decode("#F94449"), 20f, false);
 
+                cancelButton.addActionListener(e -> {
+                    int confirm = JOptionPane.showConfirmDialog(
+                            null, // parent component, can use your frame or panel
+                            "Are you sure you want to cancel this reservation?",
+                            "Confirm Cancel",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE
+                    );
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        reservationService.cancelReservation(reservation.getReservationId());
+                        refresh();
+                    }
+                });
+
                 if (reservation.getStatus() == Reservation.ReservationStatus.Canceled) {
                     cancelButton.setEnabled(false);
                     cancelButton.setBackground(Color.LIGHT_GRAY);
                     cancelButton.setForeground(Color.WHITE);
                     cancelButton.setText("Canceled");
-                } else {
-                    cancelButton.addActionListener(e -> {
-                        int confirm = JOptionPane.showConfirmDialog(
-                                null, // parent component, can use your frame or panel
-                                "Are you sure you want to cancel this reservation?",
-                                "Confirm Cancel",
-                                JOptionPane.YES_NO_OPTION,
-                                JOptionPane.WARNING_MESSAGE
-                        );
-
-                        if (confirm == JOptionPane.YES_OPTION) {
-                            reservationService.cancelReservation(reservation.getReservationId());
-                            refresh();
-                        }
-                    });
                 }
 
                 status.add(statusLabel);
