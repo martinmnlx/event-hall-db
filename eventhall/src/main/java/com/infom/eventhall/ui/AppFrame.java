@@ -3,11 +3,9 @@ package com.infom.eventhall.ui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.*;
 import java.io.*;
 
 import com.infom.eventhall.DatabaseManager;
-import com.infom.eventhall.model.EventHall;
 import com.infom.eventhall.model.User;
 
 import com.infom.eventhall.service.*;
@@ -17,6 +15,7 @@ import lombok.Data;
 
 public class AppFrame extends JFrame {
 
+    // Logged-In User
     private User user;
 
     private final DatabaseManager db;
@@ -25,14 +24,17 @@ public class AppFrame extends JFrame {
     private final JPanel mainPanel;
     private Font thinFont, regularFont, boldFont;
 
+    // Services
     private final UserService userService;
     private final StaffService staffService;
     private final EventHallService eventHallService;
     private final EquipmentService equipmentService;
     private final ReservationService reservationService;
+    private final EquipmentAllocationService equipmentAllocationService;
 
     // Admin UI
     private final AdminUI adminUI;
+    private final RecordsUI recordsUI;
 
     // Sign In/Up UI
     private final LoginUI loginUI;
@@ -52,6 +54,7 @@ public class AppFrame extends JFrame {
         eventHallService = new EventHallService(db);
         equipmentService = new EquipmentService(db);
         reservationService = new ReservationService(db);
+        equipmentAllocationService = new EquipmentAllocationService(db);
 
         loadFonts();
 
@@ -64,7 +67,8 @@ public class AppFrame extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        mainPanel.add(adminUI = new AdminUI(this, userService, staffService, eventHallService, equipmentService, reservationService), "admin");
+        mainPanel.add(adminUI = new AdminUI(this), "admin");
+        mainPanel.add(recordsUI = new RecordsUI(this, userService, staffService, eventHallService, equipmentService, reservationService, equipmentAllocationService), "records");
         mainPanel.add(loginUI = new LoginUI(this, userService), "login");
         mainPanel.add(registerUI = new RegisterUI(this, userService), "register");
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
@@ -76,7 +80,7 @@ public class AppFrame extends JFrame {
 
         setVisible(true);
 
-        showScreen("login");
+        showScreen("admin");
     }
 
     public void showScreen(String name) {
@@ -86,6 +90,7 @@ public class AppFrame extends JFrame {
             case "dashboard" -> dashboardUI.refresh();
             case "bookings" -> bookingsUI.refresh();
             case "reserve" -> reserveUI.refresh();
+            case "admin" -> adminUI.refresh();
         }
 
         System.out.println("Panel changed: " + name);

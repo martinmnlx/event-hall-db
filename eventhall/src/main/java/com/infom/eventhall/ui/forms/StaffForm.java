@@ -1,12 +1,10 @@
-package com.infom.eventhall.ui;
+package com.infom.eventhall.ui.forms;
 
 import com.infom.eventhall.model.Staff;
 import com.infom.eventhall.service.StaffService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class StaffForm extends JDialog {
 

@@ -87,6 +87,21 @@ public class EquipmentAllocationDAO {
         return allocationList;
     }
 
+    public List<EquipmentAllocation> getAllAllocations() {
+        List<EquipmentAllocation> allocationList = new ArrayList<>();
+        String sql = "SELECT * FROM Equipment_Allocations";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                allocationList.add(mapRowToAllocation(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allocationList;
+    }
+
     public int getReservedQuantityForTheDay(int equipmentId, LocalDate eventDate) {
         // to prevent giving garbage values (For IFNULL)
         String sql = "SELECT IFNULL(SUM(ea.quantity_used), 0) FROM equipment_allocations ea " +
