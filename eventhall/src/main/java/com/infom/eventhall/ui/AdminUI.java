@@ -99,6 +99,67 @@ public class AdminUI extends JPanel {
         createButton = app.createButton("Create", Color.BLUE, 24f, false);
         updateButton = app.createButton("Update", Color.BLUE, 24f, false);
         deleteButton = app.createButton("Delete", Color.BLUE, 24f, false);
+
+        deleteButton.addActionListener(e -> {
+            int row = table.getSelectedRow();
+
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this,
+                        "Please select a record to delete.",
+                        "No Selection",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            String selectedRecord = (String) recordsDropdown.getSelectedItem();
+
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to delete this " + selectedRecord + " record?",
+                    "Confirm Delete",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirm != JOptionPane.YES_OPTION) return;
+
+            try {
+                switch (selectedRecord) {
+                    case "Staff":
+                        int staffId = (int) model.getValueAt(row, 0);
+                        staffService.deleteStaff(staffId);
+                        break;
+
+                    case "Users":
+                        int userId = (int) model.getValueAt(row, 0);
+                        userService.deleteUser(userId);
+                        break;
+
+                    case "Event Halls":
+                        int hallId = (int) model.getValueAt(row, 0);
+                        eventHallService.deleteEventHall(hallId);
+                        break;
+
+                    case "Equipment":
+                        int eqId = (int) model.getValueAt(row, 0);
+                        equipmentService.deleteEquipment(eqId);
+                        break;
+
+                    case "Reservations":
+                        int resId = (int) model.getValueAt(row, 0);
+                        reservationService.deleteReservation(resId);
+                        break;
+
+                }
+
+                refreshTable();
+                JOptionPane.showMessageDialog(this, "Deleted successfully!");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Failed to delete: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         logoutButton = app.createButton("Logout (Return to Login)", Color.decode("#F94449"), 24f, false);
 
         logoutButton.addActionListener(e -> {
