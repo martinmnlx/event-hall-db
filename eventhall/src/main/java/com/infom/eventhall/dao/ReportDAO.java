@@ -50,11 +50,11 @@ public class ReportDAO {
     public List<Map<String, Object>> getHallUtilizationReport(LocalDate startingDate, LocalDate endingDate) {
         List<Map<String, Object>> reportOnHallUtilization = new ArrayList<>();
         String sql = "SELECT h.hall_name, COUNT(DISTINCT r.event_date) as days_booked " +
-                     "FROM Reservations r " +
-                     "JOIN Event_Halls h ON r.hall_id = h.hall_id " +
-                     "WHERE r.event_date BETWEEN ? AND ? " +
-                     "AND r.status = 'Confirmed' " +
-                     "GROUP BY h.hall_name";
+                     "FROM Event_Halls h " +
+                     "LEFT JOIN Reservations r ON h.hall_id = r.hall_id " +
+                     "    AND r.event_date BETWEEN ? AND ? " +
+                     "    AND r.status = 'Confirmed' " +
+                     "GROUP BY h.hall_name ";
 
         // sets all the ? parameters
         try (PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -82,6 +82,7 @@ public class ReportDAO {
         String sql = "SELECT e.equipment_name, " +
                      "COUNT(ea.allocation_id) as reservation_count, " +
                      "SUM(ea.quantity_used) as quantity_rented " +
+                     "FROM equipment_allocations ea " +
                      "JOIN reservations r ON ea.reservation_id = r.reservation_id " +
                      "JOIN equipment e ON ea.equipment_id = e.equipment_id " +
                      "WHERE r.event_date BETWEEN ? AND ? " +

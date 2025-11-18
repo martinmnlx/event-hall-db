@@ -48,11 +48,11 @@ public class RecordsUI extends JPanel {
 
         mainLabel = app.createLabel("View Records Tables", Color.BLUE, 60f, 3);
 
-        recordsLabel = app.createLabel("Record: ", Color.BLACK, 16f, 2);
+        recordsLabel = app.createLabel("Record: ", Color.BLACK, 20f, 2);
         recordsDropdown = new JComboBox<>(new String[]{
                 "Reservations", "Users", "Staff", "Event Halls", "Equipment", "Equipment Allocations"
         });
-        recordsDropdown.setFont(app.getRegularFont().deriveFont(14f));
+        recordsDropdown.setFont(app.getRegularFont().deriveFont(16f));
         recordsDropdown.setBackground(Color.WHITE);
         recordsDropdown.setMaximumSize(new Dimension(200, 60));
         ((JLabel) recordsDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
@@ -60,7 +60,7 @@ public class RecordsUI extends JPanel {
             currentRecord = (String) recordsDropdown.getSelectedItem();
             refresh();
         });
-        currentRecord = (String) recordsDropdown.getSelectedItem(); // initial value
+        currentRecord = (String) recordsDropdown.getSelectedItem();
 
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
@@ -92,10 +92,10 @@ public class RecordsUI extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 40));
 
         // Buttons
-        createButton = app.createButton("Create", Color.BLUE, 24f, false);
-        updateButton = app.createButton("Update", Color.BLUE, 24f, false);
-        deleteButton = app.createButton("Delete", Color.BLUE, 24f, false);
-        logoutButton = app.createButton("Return to Dashboard", Color.BLUE, 24f, false);
+        createButton = app.createButton("Create", Color.BLUE, 20f, false);
+        updateButton = app.createButton("Update", Color.BLUE, 20f, false);
+        deleteButton = app.createButton("Delete", Color.BLUE, 20f, false);
+        logoutButton = app.createButton("Return to Dashboard", Color.BLUE, 20f, false);
 
         // Assign single listeners
         createButton.addActionListener(e -> openCreateForm());
@@ -111,12 +111,12 @@ public class RecordsUI extends JPanel {
         buttonPanel.add(updateButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonPanel.add(deleteButton);
-        buttonPanel.add(Box.createRigidArea(new Dimension(760, 0)));
+        buttonPanel.add(Box.createRigidArea(new Dimension(820, 0)));
         buttonPanel.add(logoutButton);
 
         add(Box.createVerticalStrut(40));
         add(mainLabel);
-        add(Box.createVerticalStrut(80));
+        add(Box.createVerticalStrut(60));
         add(filterPanel);
         add(Box.createVerticalStrut(40));
         add(scrollPane);

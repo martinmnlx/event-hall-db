@@ -31,10 +31,12 @@ public class AppFrame extends JFrame {
     private final EquipmentService equipmentService;
     private final ReservationService reservationService;
     private final EquipmentAllocationService equipmentAllocationService;
+    private final ReportService reportService;
 
     // Admin UI
     private final AdminUI adminUI;
     private final RecordsUI recordsUI;
+    private final ReportsUI reportsUI;
 
     // Sign In/Up UI
     private final LoginUI loginUI;
@@ -55,6 +57,7 @@ public class AppFrame extends JFrame {
         equipmentService = new EquipmentService(db);
         reservationService = new ReservationService(db);
         equipmentAllocationService = new EquipmentAllocationService(db);
+        reportService = new ReportService(db);
 
         loadFonts();
 
@@ -69,6 +72,7 @@ public class AppFrame extends JFrame {
 
         mainPanel.add(adminUI = new AdminUI(this), "admin");
         mainPanel.add(recordsUI = new RecordsUI(this, userService, staffService, eventHallService, equipmentService, reservationService, equipmentAllocationService), "records");
+        mainPanel.add(reportsUI = new ReportsUI(this, reportService), "reports");
         mainPanel.add(loginUI = new LoginUI(this, userService), "login");
         mainPanel.add(registerUI = new RegisterUI(this, userService), "register");
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
@@ -80,7 +84,7 @@ public class AppFrame extends JFrame {
 
         setVisible(true);
 
-        showScreen("admin");
+        showScreen("login");
     }
 
     public void showScreen(String name) {

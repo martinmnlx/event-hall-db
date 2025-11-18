@@ -11,14 +11,14 @@ public class ReportService {
     private ReportDAO reportDAO;
 
     public ReportService(DatabaseManager db) {
-        // this.reportDAO = db.getReportDAO();
+        this.reportDAO = db.getReportDAO();
     }
 
     public List<Map<String, Object>> getMonthlyReservationPerHall(int month, int year) {
         return  reportDAO.getMonthlyReservationReportPerHall(month, year);
     }
 
-    public List<Map<String, Object>> getHallUtilization(LocalDate startingDate, LocalDate endingDate) {
+    public List<Map<String, Object>> getHallUtilizationReport(LocalDate startingDate, LocalDate endingDate) {
         return reportDAO.getHallUtilizationReport(startingDate, endingDate);
     }
 
@@ -26,7 +26,7 @@ public class ReportService {
         return reportDAO.getEquipmentUtilizationReport(startingDate, endingDate);
     }
 
-    public List<Map<String, Object>> getHallUtilizationReport() {
+    public List<Map<String, Object>> getEventTypeReport() {
         return reportDAO.getEventTypeReport();
     }
 }

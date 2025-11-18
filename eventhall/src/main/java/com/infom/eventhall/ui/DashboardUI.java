@@ -60,8 +60,8 @@ public class DashboardUI extends JPanel {
         add(bookingsButton);
         add(Box.createVerticalStrut(20));
         add(hallsButton);
-        add(Box.createVerticalStrut(20));
-        add(profileButton);
+        // add(Box.createVerticalStrut(20));
+        // add(profileButton);
         add(Box.createVerticalStrut(40));
         add(logoutButton);
         add(Box.createVerticalGlue());
