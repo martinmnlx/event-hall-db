@@ -135,8 +135,8 @@ public class RecordsUI extends JPanel {
             case "Users" -> new UsersForm(app, userService, null).setVisible(true);
             case "Staff" -> new StaffForm(app, staffService, null).setVisible(true);
             case "Event Halls" -> new HallsForm(app, eventHallService, null).setVisible(true);
-            //case "Equipment" -> new EquipmentForm(app, equipmentService, null).setVisible(true);
-            //case "Reservations" -> new ReservationsForm(app, reservationService, null).setVisible(true);
+            case "Equipment" -> new EquipmentForm(app, equipmentService, null).setVisible(true);
+            // case "Reservations" -> new ReservationsForm(app, reservationService, null).setVisible(true);
         }
         refreshTable();
     }
@@ -163,7 +163,7 @@ public class RecordsUI extends JPanel {
             }
             case "Equipment" -> {
                 int eqId = (int) model.getValueAt(row, 0);
-                //new EquipmentForm(app, equipmentService, equipmentService.getEquipmentById(eqId)).setVisible(true);
+                new EquipmentForm(app, equipmentService, equipmentService.getEquipmentById(eqId)).setVisible(true);
             }
             case "Reservations" -> {
                 int resId = (int) model.getValueAt(row, 0);
@@ -345,7 +345,7 @@ public class RecordsUI extends JPanel {
                     eventHallService.getHallById(reservationService.getReservationById(ea.getReservationId()).getHallId()).getHallName(),
                     reservationService.getReservationById(ea.getReservationId()).getEventDate(),
                     userService.getUserById(reservationService.getReservationById(ea.getReservationId()).getUserId()).getName(),
-                    equipmentService.getEquipmentByID(ea.getEquipmentId()).getEquipmentName(),
+                    equipmentService.getEquipmentById(ea.getEquipmentId()).getEquipmentName(),
                     ea.getQuantityUsed()
             });
         }

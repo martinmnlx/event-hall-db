@@ -32,7 +32,7 @@ public class EquipmentDAO {
         }
     }
 
-    public Equipment getEquipmentByID(int equipmentId) {
+    public Equipment getEquipmentById(int equipmentId) {
         String sql = "SELECT * FROM Equipment WHERE equipment_id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

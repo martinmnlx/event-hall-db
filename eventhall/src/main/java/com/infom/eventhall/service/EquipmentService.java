@@ -15,8 +15,8 @@ public class EquipmentService {
         this.equipmentDAO = db.getEquipmentDAO();
     }
 
-    public Equipment getEquipmentByID(int equipmentId) {
-        return equipmentDAO.getEquipmentByID(equipmentId);
+    public Equipment getEquipmentById(int equipmentId) {
+        return equipmentDAO.getEquipmentById(equipmentId);
     }
 
     public List<Equipment> getEquipmentByName(String equipmentName) {

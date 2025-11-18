@@ -109,7 +109,7 @@ public class StaffForm extends JDialog {
                 staffService.updateStaff(staff);
                 JOptionPane.showMessageDialog(this, "Staff updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
-            dispose(); // close the form
+            dispose();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

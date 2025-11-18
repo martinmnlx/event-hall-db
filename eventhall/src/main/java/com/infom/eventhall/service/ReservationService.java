@@ -50,7 +50,7 @@ public class ReservationService {
 
             // now checks for equipment availability
             for (EquipmentAllocation allocation : allocations) {
-                Equipment equipment = equipmentDAO.getEquipmentByID(allocation.getEquipmentId());
+                Equipment equipment = equipmentDAO.getEquipmentById(allocation.getEquipmentId());
                 if (equipment == null) {
                     throw new IllegalStateException("Equipment not found");
                 }
