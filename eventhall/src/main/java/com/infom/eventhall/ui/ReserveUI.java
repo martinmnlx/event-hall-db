@@ -279,12 +279,12 @@ public class ReserveUI extends JPanel {
         Reservation r = new Reservation();
         r.setHallId(hall.getHallId());
         r.setUserId(app.getUser().getUserId());
-        r.setStaffId(101);
+        r.setStaffId(null);
         r.setCreatedOn(LocalDateTime.now());
         r.setEventDate(date);
         r.setEventType(type);
         r.setGuestCount(guests);
-        r.setStatus(Reservation.ReservationStatus.Confirmed);
+        r.setStatus(Reservation.ReservationStatus.Pending);
 
         List<EquipmentAllocation> allocs = new ArrayList<>();
 

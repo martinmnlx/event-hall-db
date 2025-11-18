@@ -6,7 +6,7 @@ import com.infom.eventhall.service.UserService;
 import javax.swing.*;
 import java.awt.*;
 
-public class UsersForm extends JDialog {
+public class UserForm extends JDialog {
 
     private final UserService userService;
     private User user;
@@ -20,7 +20,7 @@ public class UsersForm extends JDialog {
     private JButton saveButton;
     private JButton cancelButton;
 
-    public UsersForm(Frame owner, UserService userService, User user) {
+    public UserForm(Frame owner, UserService userService, User user) {
         super(owner, true);
         this.userService = userService;
         this.user = user;

@@ -124,6 +124,10 @@ public class ReservationService {
         }
     }
 
+    public boolean updateReservation(Reservation reservation) {
+        return reservationDAO.updateReservation(reservation);
+    }
+
     public boolean deleteReservation(int reservationId) {
         return reservationDAO.deleteReservation(reservationId);
     }

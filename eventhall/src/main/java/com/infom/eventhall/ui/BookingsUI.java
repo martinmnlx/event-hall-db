@@ -140,16 +140,19 @@ public class BookingsUI extends JPanel {
                 EventHall hall = eventHallService.getHallById(reservation.getHallId());
                 User user = userService.getUserById(reservation.getUserId());
                 Staff staff = staffService.getStaffById(reservation.getStaffId());
+                String staffName = (staff != null ? staff.getName() : "");
+                String staffPhone = (staff != null ? staff.getPhoneNumber() : "");
 
                 JLabel nameLabel = app.createLabel(hall.getHallName(), Color.BLUE, 32f, 3);
                 JLabel dateLabel = app.createLabel("Date: " + reservation.getEventDate(), Color.BLACK, 16f, 2);
                 JLabel typeLabel = app.createLabel("Type: " + reservation.getEventType(), Color.BLACK, 16f, 2);
-                JLabel capacityLabel = app.createLabel("Staff-In-Charge: " + staff.getName(), Color.BLACK, 16f, 2);
-                JLabel locationLabel = app.createLabel("Contact Number: " + staff.getPhoneNumber(), Color.BLACK, 16f, 2);
+                JLabel capacityLabel = app.createLabel("Staff-In-Charge: " + staffName, Color.BLACK, 16f, 2);
+                JLabel locationLabel = app.createLabel("Contact Number: " + staffPhone, Color.BLACK, 16f, 2);
                 JLabel guestsLabel = app.createLabel("Guest Count: " + reservation.getGuestCount(), Color.BLACK, 16f, 2);
                 JLabel statusLabel = app.createLabel("Status: ", Color.BLACK, 16f, 2);
 
                 Color availColor = Color.BLACK;
+                if (reservation.getStatus().name().equals("Pending")) availColor = Color.ORANGE;
                 if (reservation.getStatus().name().equals("Confirmed")) availColor = Color.decode("#5BB450");
                 if (reservation.getStatus().name().equals("Canceled")) availColor = Color.RED;
                 if (reservation.getStatus().name().equals("Completed")) availColor = Color.BLUE;

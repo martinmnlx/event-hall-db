@@ -6,7 +6,7 @@ import com.infom.eventhall.service.EventHallService;
 import javax.swing.*;
 import java.awt.*;
 
-public class HallsForm extends JDialog {
+public class EventHallForm extends JDialog {
 
     private final EventHallService eventHallService;
     private EventHall eventHall;
@@ -19,7 +19,7 @@ public class HallsForm extends JDialog {
     private JButton saveButton;
     private JButton cancelButton;
 
-    public HallsForm(Frame owner, EventHallService eventHallService, EventHall eventHall) {
+    public EventHallForm(Frame owner, EventHallService eventHallService, EventHall eventHall) {
         super(owner, true);
         this.eventHallService = eventHallService;
         this.eventHall = eventHall;

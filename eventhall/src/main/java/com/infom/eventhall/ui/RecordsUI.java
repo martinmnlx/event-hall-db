@@ -132,11 +132,11 @@ public class RecordsUI extends JPanel {
 
     private void openCreateForm() {
         switch (currentRecord) {
-            case "Users" -> new UsersForm(app, userService, null).setVisible(true);
+            case "Users" -> new UserForm(app, userService, null).setVisible(true);
             case "Staff" -> new StaffForm(app, staffService, null).setVisible(true);
-            case "Event Halls" -> new HallsForm(app, eventHallService, null).setVisible(true);
+            case "Event Halls" -> new EventHallForm(app, eventHallService, null).setVisible(true);
             case "Equipment" -> new EquipmentForm(app, equipmentService, null).setVisible(true);
-            // case "Reservations" -> new ReservationsForm(app, reservationService, null).setVisible(true);
+            case "Reservations" -> new ReservationForm(app, reservationService, null, eventHallService, userService, staffService).setVisible(true);
         }
         refreshTable();
     }
@@ -151,7 +151,7 @@ public class RecordsUI extends JPanel {
         switch (currentRecord) {
             case "Users" -> {
                 int userId = (int) model.getValueAt(row, 0);
-                new UsersForm(app, userService, userService.getUserById(userId)).setVisible(true);
+                new UserForm(app, userService, userService.getUserById(userId)).setVisible(true);
             }
             case "Staff" -> {
                 int staffId = (int) model.getValueAt(row, 0);
@@ -159,7 +159,7 @@ public class RecordsUI extends JPanel {
             }
             case "Event Halls" -> {
                 int hallId = (int) model.getValueAt(row, 0);
-                new HallsForm(app, eventHallService, eventHallService.getHallById(hallId)).setVisible(true);
+                new EventHallForm(app, eventHallService, eventHallService.getHallById(hallId)).setVisible(true);
             }
             case "Equipment" -> {
                 int eqId = (int) model.getValueAt(row, 0);
@@ -167,7 +167,7 @@ public class RecordsUI extends JPanel {
             }
             case "Reservations" -> {
                 int resId = (int) model.getValueAt(row, 0);
-                //new ReservationsForm(app, reservationService, reservationService.getReservationById(resId)).setVisible(true);
+                new ReservationForm(app, reservationService, reservationService.getReservationById(resId), eventHallService, userService, staffService).setVisible(true);
             }
         }
         refreshTable();
@@ -304,21 +304,24 @@ public class RecordsUI extends JPanel {
         model.addColumn("Event Hall");
         model.addColumn("Customer");
         model.addColumn("Email");
-        model.addColumn("Staff-In-Charge");
+        model.addColumn("Staff In-Charge");
         model.addColumn("Date Reserved");
         model.addColumn("Event Type");
         model.addColumn("Guest Count");
-        model.addColumn("Created On");
+        model.addColumn("Date Created");
         model.addColumn("Status");
 
         List<Reservation> reservations = reservationService.getAllReservations();
         for (Reservation r : reservations) {
+            Staff staff = staffService.getStaffById(r.getStaffId());
+            String staffName = (staff != null ? staff.getName() : "");
+
             model.addRow(new Object[]{
                     r.getReservationId(),
                     eventHallService.getHallById(r.getHallId()).getHallName(),
                     userService.getUserById(r.getUserId()).getName(),
                     userService.getUserById(r.getUserId()).getEmail(),
-                    staffService.getStaffById(r.getStaffId()).getName(),
+                    staffName,
                     r.getEventDate(),
                     r.getEventType(),
                     r.getGuestCount(),
@@ -331,20 +334,20 @@ public class RecordsUI extends JPanel {
     private void showEquipmentAllocationsTable() {
         model.setRowCount(0);
         model.setColumnCount(0);
+        model.addColumn("Allocation ID");
         model.addColumn("Reservation ID");
         model.addColumn("Event Hall");
         model.addColumn("Use Date");
-        model.addColumn("Customer");
         model.addColumn("Equipment");
         model.addColumn("Quantity");
 
         List<EquipmentAllocation> allocs = equipmentAllocationService.getAllAllocations();
         for (EquipmentAllocation ea : allocs) {
             model.addRow(new Object[]{
+                    ea.getAllocationId(),
                     ea.getReservationId(),
                     eventHallService.getHallById(reservationService.getReservationById(ea.getReservationId()).getHallId()).getHallName(),
                     reservationService.getReservationById(ea.getReservationId()).getEventDate(),
-                    userService.getUserById(reservationService.getReservationById(ea.getReservationId()).getUserId()).getName(),
                     equipmentService.getEquipmentById(ea.getEquipmentId()).getEquipmentName(),
                     ea.getQuantityUsed()
             });

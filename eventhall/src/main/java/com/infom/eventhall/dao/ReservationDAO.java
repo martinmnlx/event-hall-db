@@ -25,7 +25,8 @@ public class ReservationDAO {
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, reservation.getUserId());
             stmt.setInt(2, reservation.getHallId());
-            stmt.setInt(3, reservation.getStaffId());
+            if (reservation.getStaffId() != null) stmt.setInt(3, reservation.getStaffId());
+            else stmt.setNull(3, java.sql.Types.INTEGER);
             stmt.setTimestamp(4, Timestamp.valueOf(reservation.getCreatedOn()));
             stmt.setDate(5, Date.valueOf(reservation.getEventDate()));
             stmt.setString(6, reservation.getEventType());

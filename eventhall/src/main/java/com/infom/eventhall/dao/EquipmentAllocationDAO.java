@@ -161,6 +161,7 @@ public class EquipmentAllocationDAO {
         allocation.setAllocationId(rs.getInt("allocation_id"));
         allocation.setReservationId(rs.getInt("reservation_id"));
         allocation.setEquipmentId(rs.getInt("equipment_id"));
+        allocation.setQuantityUsed(rs.getInt("quantity_used"));
         return allocation;
     }
 }
