@@ -158,6 +158,20 @@ public class ReservationDAO {
         }
     }
 
+    public boolean markPastReservationsAsCompleted() {
+        String sql = "UPDATE reservations " +
+                "SET status = 'Completed' " +
+                "WHERE status = 'Confirmed' AND event_date < CURRENT_DATE";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean deleteReservation(int reservationId) {
         String sql = "DELETE FROM Reservations WHERE reservation_id = ?";
 

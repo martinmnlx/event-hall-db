@@ -105,7 +105,7 @@ public class HallsUI extends JPanel {
             btn.setPreferredSize(new Dimension(30, 32));
         }
 
-        statusDropdown = new JComboBox<>(new String[]{"All", "Available", "Maintenance"});
+        statusDropdown = new JComboBox<>(new String[]{"Available", "Booked", "Maintenance", "All"});
         statusDropdown.setFont(app.getRegularFont().deriveFont(14f));
         statusDropdown.setBackground(Color.WHITE);
         ((JLabel) statusDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
@@ -179,6 +179,7 @@ public class HallsUI extends JPanel {
         String searchText = nameSearch.getText().toLowerCase();
         int minCap = (int) minCapacity.getValue();
         String selectedStatus = (String) statusDropdown.getSelectedItem();
+        String computedStatus;
         Date selectedDate = (Date) datePicker.getModel().getValue();
         LocalDate date = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
@@ -186,11 +187,15 @@ public class HallsUI extends JPanel {
             boolean matchesCity = selectedCity.equals("All") || hall.getLocation().equals(selectedCity);
             boolean matchesName = hall.getHallName().toLowerCase().contains(searchText);
             boolean matchesCapacity = hall.getCapacity() >= minCap;
-            boolean matchesStatus = selectedStatus.equals("All") || hall.getStatus().name().equals(selectedStatus);
-            boolean isMaintenance = hall.getStatus().name().equals("Maintenance");
             boolean matchesDate = eventHallService.isHallAvailableOnDate(hall, date);
 
-            if (matchesCity && matchesName && matchesCapacity && matchesStatus && (matchesDate || isMaintenance)) {
+            if (hall.getStatus().name().equals("Maintenance")) computedStatus = "Maintenance";
+            else if (!matchesDate) computedStatus = "Booked";
+            else computedStatus = "Available";
+
+            boolean matchesStatus = selectedStatus.equals("All") || selectedStatus.equals(computedStatus);
+
+            if (matchesCity && matchesName && matchesCapacity && matchesStatus) {
                 JPanel hallCard = new JPanel();
                 hallCard.setLayout(new BoxLayout(hallCard, BoxLayout.X_AXIS));
                 hallCard.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -220,12 +225,19 @@ public class HallsUI extends JPanel {
 
                 JButton bookButton = app.createButton("Book", Color.BLUE, 20f, false);
 
-                if (hall.getStatus().name().equals("Maintenance")) {
+                if (computedStatus.equals("Maintenance")) {
                     availLabel.setForeground(Color.decode("#F94449"));
                     bookButton.setEnabled(false);
                     bookButton.setBackground(Color.LIGHT_GRAY);
                     bookButton.setForeground(Color.WHITE);
                     bookButton.setText("Under Maintenance");
+                } else if (computedStatus.equals("Booked")) {
+                    availLabel.setForeground(Color.decode("#F94449"));
+                    availLabel.setText("Booked");
+                    bookButton.setEnabled(false);
+                    bookButton.setBackground(Color.LIGHT_GRAY);
+                    bookButton.setForeground(Color.WHITE);
+                    bookButton.setText("Booked");
                 }
 
                 bookButton.addActionListener(e -> {

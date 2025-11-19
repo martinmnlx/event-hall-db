@@ -107,6 +107,10 @@ public class ReservationService {
         return reservationDAO.updateReservation(reservation);
     }
 
+    public boolean markPastReservationsAsCompleted() {
+        return reservationDAO.markPastReservationsAsCompleted();
+    }
+
     public boolean deleteReservation(int reservationId) {
         return reservationDAO.deleteReservation(reservationId);
     }
