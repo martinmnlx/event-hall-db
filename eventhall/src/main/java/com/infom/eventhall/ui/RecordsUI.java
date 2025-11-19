@@ -26,6 +26,7 @@ public class RecordsUI extends JPanel {
 
     private final JLabel mainLabel;
     private final JLabel recordsLabel;
+    private final JLabel rowsLabel;
     private final JComboBox<String> recordsDropdown;
 
     private final JButton createButton;
@@ -62,11 +63,15 @@ public class RecordsUI extends JPanel {
         });
         currentRecord = (String) recordsDropdown.getSelectedItem();
 
+        rowsLabel = app.createLabel("0 Rows", Color.BLUE, 20f, 3);
+
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
         filterPanel.add(recordsLabel);
         filterPanel.add(Box.createRigidArea(new Dimension(8, 0)));
         filterPanel.add(recordsDropdown);
+        filterPanel.add(Box.createRigidArea(new Dimension(24, 0)));
+        filterPanel.add(rowsLabel);
         filterPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         model = new DefaultTableModel();
@@ -212,6 +217,8 @@ public class RecordsUI extends JPanel {
             case "Reservations" -> showReservationsTable();
             case "Equipment Allocations" -> showEquipmentAllocationsTable();
         }
+
+        rowsLabel.setText(String.valueOf(table.getRowCount()) + " Rows");
     }
 
     // -------------------- TABLE DATA --------------------

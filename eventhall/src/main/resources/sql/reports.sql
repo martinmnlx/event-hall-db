@@ -1,16 +1,16 @@
 -- Monthly Reservation Report per Hall
 SELECT h.hall_name, COUNT(r.reservation_id) as reservation_count 
 FROM Reservations r 
-JOIN Event_Halls h ON r.hall_id = h.hall_id 
+LEFT JOIN Event_Halls h ON r.hall_id = h.hall_id 
 WHERE MONTH(r.event_date) = 11 AND YEAR(r.event_date) = 2025
-AND r.status = Confirmed
+AND r.status = 'Confirmed'
 GROUP BY h.hall_name;
 
 -- Hall Utilization Report
 SELECT h.hall_name, COUNT(DISTINCT r.event_date) as days_booked 
 FROM Reservations r 
 JOIN Event_Halls h ON r.hall_id = h.hall_id 
-WHERE r.event_date BETWEEN '2025-01-01' AND '2025-06-01' 
+WHERE r.event_date BETWEEN '2025-11-01' AND '2025-11-30' 
 AND r.status = 'Confirmed' 
 GROUP BY h.hall_name;
 
