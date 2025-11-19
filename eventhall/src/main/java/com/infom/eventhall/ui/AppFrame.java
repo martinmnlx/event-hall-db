@@ -99,7 +99,13 @@ public class AppFrame extends JFrame {
             case "records" -> recordsUI.refresh();
         }
 
+        refresh();
+
         System.out.println("Panel changed: " + name);
+    }
+
+    public void refresh() {
+        reservationService.markPastReservationsAsCompleted();
     }
 
     private void loadFonts() {

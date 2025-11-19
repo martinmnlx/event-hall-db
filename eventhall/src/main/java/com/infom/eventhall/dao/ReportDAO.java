@@ -24,7 +24,7 @@ public class ReportDAO {
                      "FROM Reservations r " +
                      "JOIN Event_Halls h ON r.hall_id = h.hall_id " +
                      "WHERE MONTH(r.event_date) = ? AND YEAR(r.event_date) = ? " +
-                     "AND r.status = 'Confirmed' " +
+                     "AND r.status IN ('Confirmed', 'Completed') " +
                      "GROUP BY h.hall_name";
         // sets all the ? parameters
         try (PreparedStatement stmt = connection.prepareStatement(sql)){
@@ -53,7 +53,7 @@ public class ReportDAO {
                      "FROM Event_Halls h " +
                      "LEFT JOIN Reservations r ON h.hall_id = r.hall_id " +
                      "    AND r.event_date BETWEEN ? AND ? " +
-                     "    AND r.status = 'Confirmed' " +
+                     "    AND r.status IN ('Confirmed', 'Completed') " +
                      "GROUP BY h.hall_name ";
 
         // sets all the ? parameters
@@ -86,7 +86,7 @@ public class ReportDAO {
                      "JOIN reservations r ON ea.reservation_id = r.reservation_id " +
                      "JOIN equipment e ON ea.equipment_id = e.equipment_id " +
                      "WHERE r.event_date BETWEEN ? AND ? " +
-                     "AND r.status = 'Confirmed' " +
+                     "AND r.status IN ('Confirmed', 'Completed') " +
                      "GROUP BY e.equipment_name";
 
         // sets all the ? parameters
@@ -115,7 +115,7 @@ public class ReportDAO {
     public List<Map<String, Object>> getEventTypeReport() {
         List<Map<String, Object>> reportOnEventType = new ArrayList<>();
         String sql = "SELECT event_type, COUNT(*) as event_type_count FROM Reservations " +
-                     "WHERE status = 'Confirmed' " +
+                     "WHERE status IN ('Confirmed', 'Completed') " +
                      "GROUP BY event_type";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql);

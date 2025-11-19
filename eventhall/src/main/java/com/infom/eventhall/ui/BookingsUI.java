@@ -181,6 +181,11 @@ public class BookingsUI extends JPanel {
                     cancelButton.setBackground(Color.LIGHT_GRAY);
                     cancelButton.setForeground(Color.WHITE);
                     cancelButton.setText("Canceled");
+                } else if (reservation.getStatus() == Reservation.ReservationStatus.Completed) {
+                    cancelButton.setEnabled(false);
+                    cancelButton.setBackground(Color.LIGHT_GRAY);
+                    cancelButton.setForeground(Color.WHITE);
+                    cancelButton.setText("Completed");
                 }
 
                 status.add(statusLabel);

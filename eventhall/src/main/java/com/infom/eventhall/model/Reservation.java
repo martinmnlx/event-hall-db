@@ -19,6 +19,6 @@ public class Reservation {
     private ReservationStatus status;
 
     public enum ReservationStatus {
-        Pending, Confirmed, Canceled
+        Pending, Confirmed, Canceled, Completed
     }
 }
