@@ -107,6 +107,13 @@ public class UserForm extends JDialog {
             return;
         }
 
+        // Check if email is already used by another user
+        User existingUser = userService.getUserByEmail(email);
+        if (existingUser != null && (user == null || existingUser.getUserId() != user.getUserId())) {
+            JOptionPane.showMessageDialog(this, "Email is already in use by another user!", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         try {
             if (user == null) {
                 // Create new user
@@ -121,7 +128,6 @@ public class UserForm extends JDialog {
             } else {
                 // Update existing user
                 user.setType(type);
-                System.out.println(user.getType().name());
                 user.setName(name);
                 user.setEmail(email);
                 user.setPhoneNumber(phone);
