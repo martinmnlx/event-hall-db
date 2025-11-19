@@ -3,7 +3,9 @@ package com.infom.eventhall.ui;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 import com.infom.eventhall.model.EventHall;
 import com.infom.eventhall.model.Reservation;
@@ -26,6 +28,7 @@ public class BookingsUI extends JPanel {
     private final JPanel bookingsPanel;
     private final JComboBox<String> typeDropdown;
     private final JComboBox<String> statusDropdown;
+    private final JComboBox<String> sortDropdown;
     private final JLabel numResults;
 
     private List<Reservation> reservations;
@@ -53,13 +56,21 @@ public class BookingsUI extends JPanel {
         typeDropdown.setBackground(Color.WHITE);
         ((JLabel) typeDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-        statusDropdown = new JComboBox<>(new String[]{"All", "Pending", "Confirmed", "Canceled", "Completed"});
+        statusDropdown = new JComboBox<>(new String[]{"Confirmed", "Pending", "Canceled", "Completed", "All"});
         statusDropdown.setFont(app.getRegularFont().deriveFont(14f));
         statusDropdown.setBackground(Color.WHITE);
         ((JLabel) statusDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
+        sortDropdown = new JComboBox<>(new String[]{"Event Date: Latest", "Event Date: Earliest"});
+        sortDropdown.setFont(app.getRegularFont().deriveFont(14f));
+        sortDropdown.setBackground(Color.WHITE);
+        ((JLabel) sortDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
         filterPanel.add(app.createLabel("Event Type: ", Color.BLACK, 16f, 2));
         filterPanel.add(typeDropdown);
+        filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        filterPanel.add(app.createLabel("Sort By: ", Color.BLACK, 16f, 2));
+        filterPanel.add(sortDropdown);
         filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         filterPanel.add(app.createLabel("Status: ", Color.BLACK, 16f, 2));
         filterPanel.add(statusDropdown);
@@ -88,7 +99,7 @@ public class BookingsUI extends JPanel {
         add(Box.createVerticalStrut(40));
 
         typeDropdown.addActionListener(e -> refresh());
-
+        sortDropdown.addActionListener(e -> refresh());
         statusDropdown.addActionListener(e -> refresh());
 
         dashboardButton.addActionListener(e -> app.showScreen("dashboard"));
@@ -101,7 +112,8 @@ public class BookingsUI extends JPanel {
         if (app.getUser() != null) reservations = reservationService.getReservationByUserId(app.getUser().getUserId());
         else return;
 
-        Collections.reverse(reservations);
+        if (sortDropdown.getSelectedItem().equals("Event Date: Earliest")) reservations.sort(Comparator.comparing(Reservation::getEventDate));
+        if (sortDropdown.getSelectedItem().equals("Event Date: Latest")) reservations.sort(Comparator.comparing(Reservation::getEventDate).reversed());
 
         bookingsPanel.removeAll();
 
@@ -134,6 +146,9 @@ public class BookingsUI extends JPanel {
                 JPanel side = new JPanel();
                 side.setLayout(new BoxLayout(side, BoxLayout.Y_AXIS));
 
+                JPanel date = new JPanel();
+                date.setLayout(new BoxLayout(date, BoxLayout.X_AXIS));
+
                 JPanel status = new JPanel();
                 status.setLayout(new BoxLayout(status, BoxLayout.X_AXIS));
 
@@ -144,7 +159,14 @@ public class BookingsUI extends JPanel {
                 String staffPhone = (staff != null ? staff.getPhoneNumber() : "");
 
                 JLabel nameLabel = app.createLabel(hall.getHallName(), Color.BLUE, 32f, 3);
-                JLabel dateLabel = app.createLabel("Date: " + reservation.getEventDate(), Color.BLACK, 16f, 2);
+
+                JLabel dateLabel1 = app.createLabel("Date: ", Color.BLACK, 16f, 2);
+                JLabel dateLabel2 = app.createLabel(reservation.getEventDate().format(DateTimeFormatter.ofPattern("MMMM d, yyyy")), Color.BLACK, 16f, 3);
+
+                date.add(dateLabel1);
+                date.add(dateLabel2);
+                date.setAlignmentX(Component.LEFT_ALIGNMENT);
+
                 JLabel typeLabel = app.createLabel("Type: " + reservation.getEventType(), Color.BLACK, 16f, 2);
                 JLabel capacityLabel = app.createLabel("Staff-In-Charge: " + staffName, Color.BLACK, 16f, 2);
                 JLabel locationLabel = app.createLabel("Contact Number: " + staffPhone, Color.BLACK, 16f, 2);
@@ -199,7 +221,7 @@ public class BookingsUI extends JPanel {
                 main.add(Box.createVerticalStrut(16));
                 main.add(typeLabel);
                 main.add(Box.createVerticalStrut(4));
-                main.add(dateLabel);
+                main.add(date);
                 main.add(Box.createVerticalStrut(4));
                 main.add(capacityLabel);
                 main.add(Box.createVerticalStrut(4));
