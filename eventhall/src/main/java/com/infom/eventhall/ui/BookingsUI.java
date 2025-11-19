@@ -2,19 +2,13 @@ package com.infom.eventhall.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 
-import com.infom.eventhall.model.EventHall;
-import com.infom.eventhall.model.Reservation;
-import com.infom.eventhall.model.Staff;
-import com.infom.eventhall.model.User;
-import com.infom.eventhall.service.EventHallService;
-import com.infom.eventhall.service.ReservationService;
-import com.infom.eventhall.service.StaffService;
-import com.infom.eventhall.service.UserService;
+import com.infom.eventhall.model.*;
+import com.infom.eventhall.service.*;
 import lombok.Getter;
 
 public class BookingsUI extends JPanel {
@@ -24,6 +18,8 @@ public class BookingsUI extends JPanel {
     private final EventHallService eventHallService;
     private final UserService userService;
     private final StaffService staffService;
+    private final EquipmentService equipmentService;
+    private final EquipmentAllocationService allocationService;
 
     private final JPanel bookingsPanel;
     private final JComboBox<String> typeDropdown;
@@ -36,12 +32,14 @@ public class BookingsUI extends JPanel {
     @Getter
     private int chosenHallID = 0;
 
-    public BookingsUI(AppFrame app, ReservationService r, EventHallService h, UserService u, StaffService s) {
+    public BookingsUI(AppFrame app, ReservationService r, EventHallService h, UserService u, StaffService s, EquipmentService eq, EquipmentAllocationService a) {
         this.app = app;
         this.reservationService = r;
         this.eventHallService = h;
         this.userService = u;
         this.staffService = s;
+        this.equipmentService = eq;
+        this.allocationService = a;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -61,7 +59,7 @@ public class BookingsUI extends JPanel {
         statusDropdown.setBackground(Color.WHITE);
         ((JLabel) statusDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-        sortDropdown = new JComboBox<>(new String[]{"Event Date: Latest", "Event Date: Earliest"});
+        sortDropdown = new JComboBox<>(new String[]{"Event Date: Earliest", "Event Date: Latest"});
         sortDropdown.setFont(app.getRegularFont().deriveFont(14f));
         sortDropdown.setBackground(Color.WHITE);
         ((JLabel) sortDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
@@ -127,7 +125,16 @@ public class BookingsUI extends JPanel {
             boolean matchesStatus = selectedStatus.equals("All") || reservation.getStatus().name().equals(selectedStatus);
 
             if (matchesType && matchesStatus) {
-                // --- Card panel ---
+                List<EquipmentAllocation> allocs = allocationService.getAllAllocationsByReservationId(reservation.getReservationId());
+                StringBuilder equipments = new StringBuilder();
+                int count = 0;
+
+                for (EquipmentAllocation alloc : allocs) {
+                    if (count != 0) equipments.append(", ");
+                    equipments.append(equipmentService.getEquipmentById(alloc.getEquipmentId()).getEquipmentName());
+                    count ++;
+                }
+
                 JPanel hallCard = new JPanel();
                 hallCard.setLayout(new BoxLayout(hallCard, BoxLayout.X_AXIS));
                 hallCard.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -137,20 +144,14 @@ public class BookingsUI extends JPanel {
                                 BorderFactory.createEmptyBorder(20, 20, 20, 20)
                         )
                 );
-                hallCard.setMinimumSize(new Dimension(760 , 260));
-                hallCard.setMaximumSize(new Dimension(760 , 260));
+                hallCard.setMinimumSize(new Dimension(760 , 300));
+                hallCard.setMaximumSize(new Dimension(760 , 300));
 
                 JPanel main = new JPanel();
                 main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
 
                 JPanel side = new JPanel();
                 side.setLayout(new BoxLayout(side, BoxLayout.Y_AXIS));
-
-                JPanel date = new JPanel();
-                date.setLayout(new BoxLayout(date, BoxLayout.X_AXIS));
-
-                JPanel status = new JPanel();
-                status.setLayout(new BoxLayout(status, BoxLayout.X_AXIS));
 
                 EventHall hall = eventHallService.getHallById(reservation.getHallId());
                 User user = userService.getUserById(reservation.getUserId());
@@ -160,18 +161,61 @@ public class BookingsUI extends JPanel {
 
                 JLabel nameLabel = app.createLabel(hall.getHallName(), Color.BLUE, 32f, 3);
 
+                JPanel typePanel = new JPanel();
+                typePanel.setLayout(new BoxLayout(typePanel, BoxLayout.X_AXIS));
+                JLabel typeLabel1 = app.createLabel("Type: ", Color.BLACK, 16f, 2);
+                JLabel typeLabel2 = app.createLabel("" + reservation.getEventType(), Color.BLACK, 16f, 3);
+                typePanel.add(typeLabel1);
+                typePanel.add(typeLabel2);
+                typePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                JPanel datePanel = new JPanel();
+                datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.X_AXIS));
                 JLabel dateLabel1 = app.createLabel("Date: ", Color.BLACK, 16f, 2);
                 JLabel dateLabel2 = app.createLabel(reservation.getEventDate().format(DateTimeFormatter.ofPattern("MMMM d, yyyy")), Color.BLACK, 16f, 3);
+                datePanel.add(dateLabel1);
+                datePanel.add(dateLabel2);
+                datePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-                date.add(dateLabel1);
-                date.add(dateLabel2);
-                date.setAlignmentX(Component.LEFT_ALIGNMENT);
+                JPanel locationPanel = new JPanel();
+                locationPanel.setLayout(new BoxLayout(locationPanel, BoxLayout.X_AXIS));
+                JLabel locationLabel1 = app.createLabel("Location: ", Color.BLACK, 16f, 2);
+                JLabel locationLabel2 = app.createLabel(hall.getLocation(), Color.BLACK, 16f, 3);
+                locationPanel.add(locationLabel1);
+                locationPanel.add(locationLabel2);
+                locationPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-                JLabel typeLabel = app.createLabel("Type: " + reservation.getEventType(), Color.BLACK, 16f, 2);
-                JLabel capacityLabel = app.createLabel("Staff-In-Charge: " + staffName, Color.BLACK, 16f, 2);
-                JLabel locationLabel = app.createLabel("Contact Number: " + staffPhone, Color.BLACK, 16f, 2);
-                JLabel guestsLabel = app.createLabel("Guest Count: " + reservation.getGuestCount(), Color.BLACK, 16f, 2);
-                JLabel statusLabel = app.createLabel("Status: ", Color.BLACK, 16f, 2);
+                JPanel guestsPanel = new JPanel();
+                guestsPanel.setLayout(new BoxLayout(guestsPanel, BoxLayout.X_AXIS));
+                JLabel guestsLabel1 = app.createLabel("Guest Count: ", Color.BLACK, 16f, 2);
+                JLabel guestsLabel2 = app.createLabel("" + reservation.getGuestCount(), Color.BLACK, 16f, 3);
+                guestsPanel.add(guestsLabel1);
+                guestsPanel.add(guestsLabel2);
+                guestsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                JPanel staffPanel = new JPanel();
+                staffPanel.setLayout(new BoxLayout(staffPanel, BoxLayout.X_AXIS));
+                JLabel staffLabel1 = app.createLabel("Staff In-Charge: ", Color.BLACK, 16f, 2);
+                JLabel staffLabel2 = app.createLabel(staffName, Color.BLACK, 16f, 3);
+                staffPanel.add(staffLabel1);
+                staffPanel.add(staffLabel2);
+                staffPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                JPanel contactPanel = new JPanel();
+                contactPanel.setLayout(new BoxLayout(contactPanel, BoxLayout.X_AXIS));
+                JLabel contactLabel1 = app.createLabel("Contact Number: ", Color.BLACK, 16f, 2);
+                JLabel contactLabel2 = app.createLabel(staffPhone, Color.BLACK, 16f, 3);
+                contactPanel.add(contactLabel1);
+                contactPanel.add(contactLabel2);
+                contactPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                JPanel equipmentPanel = new JPanel();
+                equipmentPanel.setLayout(new BoxLayout(equipmentPanel, BoxLayout.X_AXIS));
+                JLabel equipmentLabel1 = app.createLabel("Equipment: ", Color.BLACK, 16f, 2);
+                JLabel equipmentLabel2 = app.createLabel(equipments.toString(), Color.BLACK, 16f, 3);
+                equipmentPanel.add(equipmentLabel1);
+                equipmentPanel.add(equipmentLabel2);
+                equipmentPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
                 Color availColor = Color.BLACK;
                 if (reservation.getStatus().name().equals("Pending")) availColor = Color.ORANGE;
@@ -179,7 +223,13 @@ public class BookingsUI extends JPanel {
                 if (reservation.getStatus().name().equals("Canceled")) availColor = Color.RED;
                 if (reservation.getStatus().name().equals("Completed")) availColor = Color.BLUE;
 
+                JPanel statusPanel = new JPanel();
+                statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+                JLabel statusLabel = app.createLabel("Status: ", Color.BLACK, 16f, 2);
                 JLabel availLabel = app.createLabel(reservation.getStatus().name(), availColor, 16f, 3);
+                statusPanel.add(statusLabel);
+                statusPanel.add(availLabel);
+                statusPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
                 JButton cancelButton = app.createButton("Cancel", Color.decode("#F94449"), 20f, false);
 
@@ -210,26 +260,26 @@ public class BookingsUI extends JPanel {
                     cancelButton.setText("Completed");
                 }
 
-                status.add(statusLabel);
-                status.add(availLabel);
-                status.setAlignmentX(Component.LEFT_ALIGNMENT);
-
                 side.add(Box.createVerticalGlue());
                 side.add(cancelButton);
 
                 main.add(nameLabel);
                 main.add(Box.createVerticalStrut(16));
-                main.add(typeLabel);
+                main.add(typePanel);
                 main.add(Box.createVerticalStrut(4));
-                main.add(date);
+                main.add(datePanel);
                 main.add(Box.createVerticalStrut(4));
-                main.add(capacityLabel);
+                main.add(locationPanel);
                 main.add(Box.createVerticalStrut(4));
-                main.add(locationLabel);
+                main.add(guestsPanel);
                 main.add(Box.createVerticalStrut(4));
-                main.add(guestsLabel);
+                main.add(staffPanel);
                 main.add(Box.createVerticalStrut(4));
-                main.add(status);
+                main.add(contactPanel);
+                main.add(Box.createVerticalStrut(4));
+                main.add(equipmentPanel);
+                main.add(Box.createVerticalStrut(4));
+                main.add(statusPanel);
 
                 hallCard.add(main);
                 hallCard.add(side);

@@ -90,6 +90,12 @@ public class LoginUI extends JPanel {
         registerButton.addActionListener(e -> app.showScreen("register"));
     }
 
+    public void refresh() {
+        emailField.setText("");
+        passwordField.setText("");
+        warningLabel.setText("");
+    }
+
     private void handleLogin() {
         String email = emailField.getText();
         String password = new String(passwordField.getPassword());

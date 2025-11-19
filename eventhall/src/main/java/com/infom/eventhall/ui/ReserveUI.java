@@ -71,7 +71,7 @@ public class ReserveUI extends JPanel {
 
         datePanel = new JDatePanelImpl(model, p);
         datePicker = new JDatePickerImpl(datePanel, new JFormattedTextField.AbstractFormatter() {
-            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat df = new SimpleDateFormat("MMMM d, yyyy");
             @Override
             public Object stringToValue(String text) throws ParseException { return df.parse(text); }
             @Override
@@ -190,7 +190,6 @@ public class ReserveUI extends JPanel {
         equipmentPanel.setLayout(new BoxLayout(equipmentPanel, BoxLayout.X_AXIS));
         equipmentPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Add checkboxes (or other components) inside a vertical BoxLayout panel
         JPanel checkBoxPanel = new JPanel();
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
         checkBoxPanel.add(fogMachine = createCheckBox("Fog Machine"));

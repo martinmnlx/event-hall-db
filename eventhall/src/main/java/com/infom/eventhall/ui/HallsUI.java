@@ -83,7 +83,7 @@ public class HallsUI extends JPanel {
 
         datePanel = new JDatePanelImpl(model, p);
         datePicker = new JDatePickerImpl(datePanel, new JFormattedTextField.AbstractFormatter() {
-            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat df = new SimpleDateFormat("MMMM d, yyyy");
             @Override
             public Object stringToValue(String text) throws ParseException { return df.parse(text); }
             @Override
@@ -94,7 +94,7 @@ public class HallsUI extends JPanel {
         });
 
         JFormattedTextField tf = datePicker.getJFormattedTextField();
-        tf.setPreferredSize(new Dimension(120, 32));
+        tf.setPreferredSize(new Dimension(160, 32));
         tf.setFont(app.getRegularFont().deriveFont(14f));
         tf.setMargin(new Insets(4, 4, 4, 4));
         tf.setBackground(Color.WHITE);
@@ -214,14 +214,31 @@ public class HallsUI extends JPanel {
                 JPanel side = new JPanel();
                 side.setLayout(new BoxLayout(side, BoxLayout.Y_AXIS));
 
-                JPanel status = new JPanel();
-                status.setLayout(new BoxLayout(status, BoxLayout.X_AXIS));
-
                 JLabel nameLabel = app.createLabel(hall.getHallName(), Color.BLUE, 32f, 3);
-                JLabel capacityLabel = app.createLabel("Capacity: " + hall.getCapacity(), Color.BLACK, 16f, 2);
-                JLabel locationLabel = app.createLabel("Location: " + hall.getLocation(), Color.BLACK, 16f, 2);
+
+                JPanel capacityPanel = new JPanel();
+                capacityPanel.setLayout(new BoxLayout(capacityPanel, BoxLayout.X_AXIS));
+                JLabel capacityLabel1 = app.createLabel("Capacity: ", Color.BLACK, 16f, 2);
+                JLabel capacityLabel2 = app.createLabel("" + hall.getCapacity(), Color.BLACK, 16f, 3);
+                capacityPanel.add(capacityLabel1);
+                capacityPanel.add(capacityLabel2);
+                capacityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                JPanel locationPanel = new JPanel();
+                locationPanel.setLayout(new BoxLayout(locationPanel, BoxLayout.X_AXIS));
+                JLabel locationLabel1 = app.createLabel("Location: ", Color.BLACK, 16f, 2);
+                JLabel locationLabel2 = app.createLabel("" + hall.getLocation(), Color.BLACK, 16f, 3);
+                locationPanel.add(locationLabel1);
+                locationPanel.add(locationLabel2);
+                locationPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                JPanel statusPanel = new JPanel();
+                statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
                 JLabel statusLabel = app.createLabel("Status: ", Color.BLACK, 16f, 2);
                 JLabel availLabel = app.createLabel(hall.getStatus().name(), Color.decode("#5BB450"), 16f, 3);
+                statusPanel.add(statusLabel);
+                statusPanel.add(availLabel);
+                statusPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
                 JButton bookButton = app.createButton("Book", Color.BLUE, 20f, false);
 
@@ -245,20 +262,16 @@ public class HallsUI extends JPanel {
                     app.showScreen("reserve");
                 });
 
-                status.add(statusLabel);
-                status.add(availLabel);
-                status.setAlignmentX(Component.LEFT_ALIGNMENT);
-
                 side.add(Box.createVerticalGlue());
                 side.add(bookButton);
 
                 main.add(nameLabel);
                 main.add(Box.createVerticalStrut(16));
-                main.add(capacityLabel);
+                main.add(capacityPanel);
                 main.add(Box.createVerticalStrut(4));
-                main.add(locationLabel);
+                main.add(locationPanel);
                 main.add(Box.createVerticalStrut(4));
-                main.add(status);
+                main.add(statusPanel);
 
                 hallCard.add(main);
                 hallCard.add(side);

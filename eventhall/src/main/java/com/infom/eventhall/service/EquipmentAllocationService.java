@@ -18,6 +18,10 @@ public class EquipmentAllocationService {
         return equipmentAllocationDAO.createAllocation(alloc);
     }
 
+    public List<EquipmentAllocation> getAllAllocationsByReservationId(int reservationId) {
+        return equipmentAllocationDAO.getAllAllocationsByReservationId(reservationId);
+    }
+
     public List<EquipmentAllocation> getAllAllocations() {
         return equipmentAllocationDAO.getAllAllocations();
     }

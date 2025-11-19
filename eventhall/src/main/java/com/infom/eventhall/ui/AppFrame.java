@@ -78,7 +78,7 @@ public class AppFrame extends JFrame {
         mainPanel.add(dashboardUI = new DashboardUI(this), "dashboard");
         mainPanel.add(hallsUI = new HallsUI(this, eventHallService), "halls");
         mainPanel.add(reserveUI = new ReserveUI(this, reservationService, eventHallService), "reserve");
-        mainPanel.add(bookingsUI = new BookingsUI(this, reservationService, eventHallService, userService, staffService), "bookings");
+        mainPanel.add(bookingsUI = new BookingsUI(this, reservationService, eventHallService, userService, staffService, equipmentService, equipmentAllocationService), "bookings");
 
         add(mainPanel);
 
@@ -91,6 +91,7 @@ public class AppFrame extends JFrame {
         cardLayout.show(mainPanel, name);
 
         switch (name) {
+            case "login" -> loginUI.refresh();
             case "dashboard" -> dashboardUI.refresh();
             case "bookings" -> bookingsUI.refresh();
             case "halls" -> hallsUI.refresh();
