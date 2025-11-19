@@ -31,7 +31,7 @@ CREATE TABLE Event_Halls (
     hall_name VARCHAR(100) NOT NULL,
     capacity INT NOT NULL,
     location VARCHAR(100),
-    status ENUM('Available', 'Booked', 'Maintenance') DEFAULT 'Available'
+    status ENUM('Available', 'Maintenance') DEFAULT 'Available'
 ) AUTO_INCREMENT = 101;
 
 -- ===============================

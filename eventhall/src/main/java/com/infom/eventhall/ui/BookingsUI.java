@@ -220,8 +220,8 @@ public class BookingsUI extends JPanel {
                 Color availColor = Color.BLACK;
                 if (reservation.getStatus().name().equals("Pending")) availColor = Color.ORANGE;
                 if (reservation.getStatus().name().equals("Confirmed")) availColor = Color.decode("#5BB450");
-                if (reservation.getStatus().name().equals("Canceled")) availColor = Color.RED;
-                if (reservation.getStatus().name().equals("Completed")) availColor = Color.BLUE;
+                if (reservation.getStatus().name().equals("Canceled")) availColor = Color.decode("#F94449");
+                if (reservation.getStatus().name().equals("Completed")) availColor = Color.GRAY;
 
                 JPanel statusPanel = new JPanel();
                 statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));

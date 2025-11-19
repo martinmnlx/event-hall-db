@@ -238,7 +238,7 @@ public class ReserveUI extends JPanel {
             if (result.isSuccess()) {
                 JOptionPane.showMessageDialog(
                         null,
-                        "Reserved successfully! You may now track it on your booking history.",
+                        "Reserved successfully! You may now track its status on your booking history.",
                         "Reservation Success",
                         JOptionPane.INFORMATION_MESSAGE
                 );

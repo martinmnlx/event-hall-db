@@ -6,6 +6,7 @@ import com.infom.eventhall.DatabaseManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -125,6 +126,20 @@ public class ReservationService {
 
     public List<Reservation> getReservationByUserId(int userId) {
         return reservationDAO.getReservationByUserId(userId);
+    }
+
+    public List<Reservation> getReservationByStaffId(int staffId) {
+        return reservationDAO.getReservationByStaffId(staffId);
+    }
+
+    public boolean isStaffBusyOnDate(int staffId, LocalDate date) {
+        List<Reservation> reservations = getReservationByStaffId(staffId);
+        for (Reservation r : reservations) {
+            if (r.getEventDate().isEqual(date) && (r.getStatus() != Reservation.ReservationStatus.Canceled)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<Reservation> getReservationByHallId(int hallId) {

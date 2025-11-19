@@ -249,7 +249,7 @@ public class HallsUI extends JPanel {
                     bookButton.setForeground(Color.WHITE);
                     bookButton.setText("Under Maintenance");
                 } else if (computedStatus.equals("Booked")) {
-                    availLabel.setForeground(Color.decode("#F94449"));
+                    availLabel.setForeground(Color.GRAY);
                     availLabel.setText("Booked");
                     bookButton.setEnabled(false);
                     bookButton.setBackground(Color.LIGHT_GRAY);

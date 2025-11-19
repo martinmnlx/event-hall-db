@@ -5,6 +5,9 @@ import com.infom.eventhall.service.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class ReservationForm extends JDialog {
 
@@ -15,6 +18,7 @@ public class ReservationForm extends JDialog {
     private Reservation reservation;
 
     private JComboBox<HallItem> hallDropdown;
+    private JTextField dateField;
     private JComboBox<UserItem> userDropdown;
     private JComboBox<StaffItem> staffDropdown;
     private JComboBox<String> typeDropdown;
@@ -54,9 +58,16 @@ public class ReservationForm extends JDialog {
         gbc.gridx = 1;
         formPanel.add(hallDropdown, gbc);
 
-        // --- User Dropdown ---
         gbc.gridx = 0;
         gbc.gridy = 1;
+        formPanel.add(new JLabel("Date:"), gbc);
+        dateField = new JTextField(20);
+        gbc.gridx = 1;
+        formPanel.add(dateField, gbc);
+
+        // --- User Dropdown ---
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         formPanel.add(new JLabel("Customer:"), gbc);
 
         userDropdown = new JComboBox<>();
@@ -68,7 +79,7 @@ public class ReservationForm extends JDialog {
 
         // --- Staff Dropdown ---
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         formPanel.add(new JLabel("Staff In-Charge:"), gbc);
 
         staffDropdown = new JComboBox<>();
@@ -80,7 +91,7 @@ public class ReservationForm extends JDialog {
 
         // --- Type Dropdown ---
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         formPanel.add(new JLabel("Event Type:"), gbc);
 
         typeDropdown = new JComboBox<>(new String[]{"Birthday", "Wedding", "Meeting", "Conference", "Other"});
@@ -90,7 +101,7 @@ public class ReservationForm extends JDialog {
 
         // --- Guest Count ---
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         formPanel.add(new JLabel("Guest Count:"), gbc);
 
         guestSpinner = new JSpinner(new SpinnerNumberModel(0, 0, eventHallService.getHallById(reservation.getHallId()).getCapacity().intValue(), 10));
@@ -100,7 +111,7 @@ public class ReservationForm extends JDialog {
 
         // --- Status Dropdown ---
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         formPanel.add(new JLabel("Status:"), gbc);
 
         statusDropdown = new JComboBox<>(Reservation.ReservationStatus.values());
@@ -120,6 +131,8 @@ public class ReservationForm extends JDialog {
         // Populate if editing
         if (reservation != null) {
             selectComboBoxItem(hallDropdown, reservation.getHallId());
+            dateField.setText(reservation.getEventDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            dateField.setEnabled(false);
             selectComboBoxItem(userDropdown, reservation.getUserId());
             selectComboBoxItem(staffDropdown, reservation.getStaffId());
             guestSpinner.setValue(reservation.getGuestCount());
@@ -145,11 +158,18 @@ public class ReservationForm extends JDialog {
         UserItem user = (UserItem) userDropdown.getSelectedItem();
         StaffItem staff = (StaffItem) staffDropdown.getSelectedItem();
         String type = (String) typeDropdown.getSelectedItem();
-        String guests = guestSpinner.getValue().toString();
+        int guests = (Integer) guestSpinner.getValue();
         Reservation.ReservationStatus status = (Reservation.ReservationStatus) statusDropdown.getSelectedItem();
+        LocalDate eventDate = reservation.getEventDate();
 
         if (hall == null || user == null || staff == null || status == null) {
             JOptionPane.showMessageDialog(this, "All fields must be selected!", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        boolean staffBusy = reservationService.isStaffBusyOnDate(staff.getId(), eventDate);
+        if (staffBusy && staff.getId() != reservation.getStaffId()) {
+            JOptionPane.showMessageDialog(this, "Selected staff is already assigned to another reservation on this date!", "Conflict", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -160,8 +180,9 @@ public class ReservationForm extends JDialog {
                 newRes.setUserId(user.getId());
                 newRes.setStaffId(staff.getId());
                 newRes.setEventType(type);
-                newRes.setGuestCount(Integer.valueOf(guests));
+                newRes.setGuestCount(guests);
                 newRes.setStatus(status);
+                newRes.setEventDate(eventDate);
                 reservationService.createReservation(newRes, null);
                 JOptionPane.showMessageDialog(this, "Reservation added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -170,7 +191,8 @@ public class ReservationForm extends JDialog {
                 reservation.setStaffId(staff.getId());
                 reservation.setEventType(type);
                 reservation.setStatus(status);
-                reservation.setGuestCount(Integer.valueOf(guests));
+                reservation.setGuestCount(guests);
+                reservation.setEventDate(eventDate);
                 reservationService.updateReservation(reservation);
                 JOptionPane.showMessageDialog(this, "Reservation updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -179,6 +201,7 @@ public class ReservationForm extends JDialog {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     // --- Helper classes ---
     interface Identifiable { int getId(); }

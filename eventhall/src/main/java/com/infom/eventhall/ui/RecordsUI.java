@@ -83,8 +83,7 @@ public class RecordsUI extends JPanel {
 
         DefaultTableCellRenderer paddingRenderer = new DefaultTableCellRenderer() {
             @Override
-            public Component getTableCellRendererComponent(
-                    JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 ((JLabel) c).setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
                 return c;
@@ -285,6 +284,27 @@ public class RecordsUI extends JPanel {
                     hall.getStatus()
             });
         }
+
+        table.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                ((JLabel) c).setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
+
+                if (value != null) {
+                    String status = value.toString();
+                    switch (status) {
+                        case "Available" -> c.setForeground(Color.decode("#5BB450"));
+                        case "Maintenance" -> c.setForeground(Color.decode("#F94449"));
+                        default -> c.setForeground(Color.BLACK);
+                    }
+                } else {
+                    c.setForeground(Color.BLACK);
+                }
+
+                return c;
+            }
+        });
     }
 
     private void showEquipmentTable() {
@@ -304,6 +324,28 @@ public class RecordsUI extends JPanel {
                     eq.getEquipment()
             });
         }
+
+        table.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                ((JLabel) c).setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
+
+                if (value != null) {
+                    String status = value.toString();
+                    switch (status) {
+                        case "InUse" -> c.setForeground(Color.ORANGE);
+                        case "Available" -> c.setForeground(Color.decode("#5BB450"));
+                        case "Maintenance" -> c.setForeground(Color.decode("#F94449"));
+                        default -> c.setForeground(Color.BLACK);
+                    }
+                } else {
+                    c.setForeground(Color.BLACK);
+                }
+
+                return c;
+            }
+        });
     }
 
     private void showReservationsTable() {
@@ -338,6 +380,29 @@ public class RecordsUI extends JPanel {
                     r.getStatus()
             });
         }
+
+        table.getColumnModel().getColumn(9).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                ((JLabel) c).setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
+
+                if (value != null) {
+                    String status = value.toString();
+                    switch (status) {
+                        case "Pending" -> c.setForeground(Color.ORANGE);
+                        case "Confirmed" -> c.setForeground(Color.decode("#5BB450"));
+                        case "Canceled" -> c.setForeground(Color.decode("#F94449"));
+                        case "Completed" -> c.setForeground(Color.GRAY);
+                        default -> c.setForeground(Color.BLACK);
+                    }
+                } else {
+                    c.setForeground(Color.BLACK);
+                }
+
+                return c;
+            }
+        });
     }
 
     private void showEquipmentAllocationsTable() {
