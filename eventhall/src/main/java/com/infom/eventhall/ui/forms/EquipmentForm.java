@@ -9,14 +9,11 @@ import java.awt.*;
 public class EquipmentForm extends JDialog {
 
     private final EquipmentService equipmentService;
-    private Equipment equipment;
+    private final Equipment equipment;
 
-    private JTextField nameField;
-    private JTextField quantityField;
-    private JComboBox statusDropdown;
-
-    private JButton saveButton;
-    private JButton cancelButton;
+    private final JTextField nameField;
+    private final JTextField quantityField;
+    private final JComboBox<Equipment.EquipmentStatus> statusDropdown;
 
     public EquipmentForm(Frame owner, EquipmentService equipmentService, Equipment equipment) {
         super(owner, true);
@@ -62,22 +59,20 @@ public class EquipmentForm extends JDialog {
 
         // Buttons
         JPanel buttonPanel = new JPanel();
-        saveButton = new JButton(equipment == null ? "Create" : "Update");
-        cancelButton = new JButton("Cancel");
+        JButton saveButton = new JButton(equipment == null ? "Create" : "Update");
+        JButton cancelButton = new JButton("Cancel");
 
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Populate fields if editing
         if (equipment != null) {
             nameField.setText(equipment.getEquipmentName());
             quantityField.setText(equipment.getQuantityTotal().toString());
             statusDropdown.setSelectedItem(equipment.getEquipment());
         }
 
-        // Button actions
         saveButton.addActionListener(e -> saveEquipment());
         cancelButton.addActionListener(e -> dispose());
     }
@@ -94,7 +89,6 @@ public class EquipmentForm extends JDialog {
 
         try {
             if (equipment == null) {
-                // Create new equipment
                 Equipment newEquipment = new Equipment();
                 newEquipment.setEquipmentName(name);
                 newEquipment.setQuantityTotal(Integer.valueOf(quantity));
@@ -102,7 +96,6 @@ public class EquipmentForm extends JDialog {
                 equipmentService.addEquipment(newEquipment);
                 JOptionPane.showMessageDialog(this, "Equipment added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                // Update existing equipment
                 equipment.setEquipmentName(name);
                 equipment.setQuantityTotal(Integer.valueOf(quantity));
                 equipment.setEquipment(status);
@@ -114,4 +107,5 @@ public class EquipmentForm extends JDialog {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 }

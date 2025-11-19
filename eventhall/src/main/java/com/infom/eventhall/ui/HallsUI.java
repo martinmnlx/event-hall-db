@@ -6,8 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date; // Import added
-import java.util.Calendar; // Import added
+import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
@@ -31,9 +31,6 @@ public class HallsUI extends JPanel {
     private final JLabel numResults;
 
     private List<EventHall> halls;
-    private List<String> cities;
-
-    private final JDatePanelImpl datePanel;
 
     @Getter
     private final JDatePickerImpl datePicker;
@@ -46,7 +43,7 @@ public class HallsUI extends JPanel {
         this.eventHallService = h;
 
         halls = eventHallService.getAllEventHalls();
-        cities = app.getDb().getEventHallDAO().getDistinctLocations();
+        List<String> cities = app.getDb().getEventHallDAO().getDistinctLocations();
 
         cities.add(0,"All");
 
@@ -67,7 +64,6 @@ public class HallsUI extends JPanel {
         cityDropdown.setBackground(Color.WHITE);
         ((JLabel) cityDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-        // --- Capacity Spinner ---
         minCapacity = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 10));
         JSpinner.DefaultEditor capEditor = (JSpinner.DefaultEditor) minCapacity.getEditor();
         capEditor.getTextField().setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
@@ -81,7 +77,7 @@ public class HallsUI extends JPanel {
         p.put("text.month", "Month");
         p.put("text.year", "Year");
 
-        datePanel = new JDatePanelImpl(model, p);
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         datePicker = new JDatePickerImpl(datePanel, new JFormattedTextField.AbstractFormatter() {
             SimpleDateFormat df = new SimpleDateFormat("MMMM d, yyyy");
             @Override
@@ -110,7 +106,6 @@ public class HallsUI extends JPanel {
         statusDropdown.setBackground(Color.WHITE);
         ((JLabel) statusDropdown.getRenderer()).setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-        // --- Add Components to Filter Panel ---
         filterPanel.add(app.createLabel("Name: ", Color.BLACK, 16f, 2));
         filterPanel.add(nameSearch);
         filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
@@ -128,7 +123,6 @@ public class HallsUI extends JPanel {
         filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         filterPanel.add(numResults = app.createLabel("0 Results", Color.BLUE, 16f, 3));
 
-        // --- Halls panel inside scroll pane ---
         hallsPanel = new JPanel();
         hallsPanel.setLayout(new BoxLayout(hallsPanel, BoxLayout.Y_AXIS));
 
@@ -149,7 +143,6 @@ public class HallsUI extends JPanel {
         add(dashboardButton);
         add(Box.createVerticalStrut(40));
 
-        // --- Listeners ---
         cityDropdown.addActionListener(e -> refresh());
 
         nameSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
@@ -172,6 +165,8 @@ public class HallsUI extends JPanel {
 
     public void refresh() {
         hallsPanel.removeAll();
+
+        halls = eventHallService.getAllEventHalls();
 
         int hallCount = 0;
 

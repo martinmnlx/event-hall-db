@@ -12,17 +12,11 @@ public class RegisterUI extends JPanel {
     private final AppFrame app;
     private final UserService userService;
 
-    private final JLabel titleLabel;
-    private final JLabel nameLabel;
-    private final JLabel emailLabel;
-    private final JLabel phoneLabel;
-    private final JLabel passwordLabel;
     private final JTextField nameField;
     private final JTextField emailField;
     private final JTextField phoneField;
     private final JPasswordField passwordField;
     private final JButton registerButton;
-    private final JButton cancelButton;
     private final JLabel warningLabel;
 
     public RegisterUI(AppFrame app, UserService userService) {
@@ -40,19 +34,19 @@ public class RegisterUI extends JPanel {
         card.setMaximumSize(new Dimension(350, 600));
         card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        titleLabel = app.createLabel("Create an Account", Color.BLUE, 60f, 3);
+        JLabel titleLabel = app.createLabel("Create an Account", Color.BLUE, 60f, 3);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        nameLabel = app.createLabel("Name", Color.BLACK, 20f, 2);
+        JLabel nameLabel = app.createLabel("Name", Color.BLACK, 20f, 2);
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        emailLabel = app.createLabel("Email", Color.BLACK, 20f, 2);
+        JLabel emailLabel = app.createLabel("Email", Color.BLACK, 20f, 2);
         emailLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        phoneLabel = app.createLabel("Phone Number", Color.BLACK, 20f, 2);
+        JLabel phoneLabel = app.createLabel("Phone Number", Color.BLACK, 20f, 2);
         phoneLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        passwordLabel = app.createLabel("Password", Color.BLACK, 20f, 2);
+        JLabel passwordLabel = app.createLabel("Password", Color.BLACK, 20f, 2);
         passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         warningLabel = app.createLabel(" ", Color.RED, 16f, 2);
@@ -68,7 +62,7 @@ public class RegisterUI extends JPanel {
 
         registerButton = app.createButton("Create Account", Color.BLUE, 20f, true);
 
-        cancelButton = app.createButton("Cancel", Color.decode("#F94449"), 20f, true);
+        JButton cancelButton = app.createButton("Cancel", Color.decode("#F94449"), 20f, true);
 
         card.add(Box.createVerticalGlue());
         card.add(nameLabel);
@@ -126,7 +120,7 @@ public class RegisterUI extends JPanel {
                 userService.registerUser(name, email, phone, password);
 
                 JOptionPane.showMessageDialog(
-                        this, // parent component
+                        this,
                         "Account registered successfully! You may login now.",
                         "Registration Successful",
                         JOptionPane.INFORMATION_MESSAGE

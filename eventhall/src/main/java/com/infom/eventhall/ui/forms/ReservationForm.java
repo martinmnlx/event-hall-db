@@ -17,16 +17,12 @@ public class ReservationForm extends JDialog {
     private final StaffService staffService;
     private Reservation reservation;
 
-    private JComboBox<HallItem> hallDropdown;
-    private JTextField dateField;
-    private JComboBox<UserItem> userDropdown;
-    private JComboBox<StaffItem> staffDropdown;
-    private JComboBox<String> typeDropdown;
-    private JSpinner guestSpinner;
-    private JComboBox<Reservation.ReservationStatus> statusDropdown;
-
-    private JButton saveButton;
-    private JButton cancelButton;
+    private final JComboBox<HallItem> hallDropdown;
+    private final JComboBox<UserItem> userDropdown;
+    private final JComboBox<StaffItem> staffDropdown;
+    private final JComboBox<String> typeDropdown;
+    private final JSpinner guestSpinner;
+    private final JComboBox<Reservation.ReservationStatus> statusDropdown;
 
     public ReservationForm(Frame owner, ReservationService reservationService, Reservation reservation, EventHallService eventHallService, UserService userService, StaffService staffService) {
         super(owner, true);
@@ -46,7 +42,7 @@ public class ReservationForm extends JDialog {
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // --- Hall Dropdown ---
+        // Hall Dropdown
         gbc.gridx = 0;
         gbc.gridy = 0;
         formPanel.add(new JLabel("Event Hall:"), gbc);
@@ -61,11 +57,11 @@ public class ReservationForm extends JDialog {
         gbc.gridx = 0;
         gbc.gridy = 1;
         formPanel.add(new JLabel("Date:"), gbc);
-        dateField = new JTextField(20);
+        JTextField dateField = new JTextField(20);
         gbc.gridx = 1;
         formPanel.add(dateField, gbc);
 
-        // --- User Dropdown ---
+        // User Dropdown
         gbc.gridx = 0;
         gbc.gridy = 2;
         formPanel.add(new JLabel("Customer:"), gbc);
@@ -77,7 +73,7 @@ public class ReservationForm extends JDialog {
         gbc.gridx = 1;
         formPanel.add(userDropdown, gbc);
 
-        // --- Staff Dropdown ---
+        // Staff Dropdown
         gbc.gridx = 0;
         gbc.gridy = 3;
         formPanel.add(new JLabel("Staff In-Charge:"), gbc);
@@ -89,7 +85,7 @@ public class ReservationForm extends JDialog {
         gbc.gridx = 1;
         formPanel.add(staffDropdown, gbc);
 
-        // --- Type Dropdown ---
+        // Type Dropdown
         gbc.gridx = 0;
         gbc.gridy = 4;
         formPanel.add(new JLabel("Event Type:"), gbc);
@@ -99,7 +95,7 @@ public class ReservationForm extends JDialog {
         gbc.gridx = 1;
         formPanel.add(typeDropdown, gbc);
 
-        // --- Guest Count ---
+        // Guest Count
         gbc.gridx = 0;
         gbc.gridy = 5;
         formPanel.add(new JLabel("Guest Count:"), gbc);
@@ -109,7 +105,7 @@ public class ReservationForm extends JDialog {
         gbc.gridx = 1;
         formPanel.add(guestSpinner, gbc);
 
-        // --- Status Dropdown ---
+        // Status Dropdown
         gbc.gridx = 0;
         gbc.gridy = 6;
         formPanel.add(new JLabel("Status:"), gbc);
@@ -122,13 +118,12 @@ public class ReservationForm extends JDialog {
 
         // Buttons
         JPanel buttonPanel = new JPanel();
-        saveButton = new JButton(reservation == null ? "Create" : "Update");
-        cancelButton = new JButton("Cancel");
+        JButton saveButton = new JButton(reservation == null ? "Create" : "Update");
+        JButton cancelButton = new JButton("Cancel");
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Populate if editing
         if (reservation != null) {
             selectComboBoxItem(hallDropdown, reservation.getHallId());
             dateField.setText(reservation.getEventDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
@@ -139,7 +134,6 @@ public class ReservationForm extends JDialog {
             statusDropdown.setSelectedItem(reservation.getStatus());
         }
 
-        // Button actions
         saveButton.addActionListener(e -> saveReservation());
         cancelButton.addActionListener(e -> dispose());
     }
@@ -203,30 +197,65 @@ public class ReservationForm extends JDialog {
     }
 
 
-    // --- Helper classes ---
-    interface Identifiable { int getId(); }
+    interface Identifiable {
+        int getId();
+    }
 
     private static class HallItem implements Identifiable {
         private final int id;
         private final String name;
-        HallItem(int id, String name) { this.id = id; this.name = name; }
-        public int getId() { return id; }
-        @Override public String toString() { return id + " " + name; }
+
+        HallItem(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        @Override
+        public String toString() {
+            return id + " " + name;
+        }
     }
 
     private static class UserItem implements Identifiable {
         private final int id;
         private final String email;
-        UserItem(int id, String email) { this.id = id; this.email = email; }
-        public int getId() { return id; }
-        @Override public String toString() { return id + " " + email; }
+
+        UserItem(int id, String email) {
+            this.id = id;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        @Override
+        public String toString() {
+            return id + " " + email;
+        }
     }
 
     private static class StaffItem implements Identifiable {
         private final int id;
         private final String name;
-        StaffItem(int id, String name) { this.id = id; this.name = name; }
-        public int getId() { return id; }
-        @Override public String toString() { return id + " " + name; }
+
+        StaffItem(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        @Override
+        public String toString() {
+            return id + " " + name;
+        }
     }
+
 }

@@ -9,15 +9,12 @@ import java.awt.*;
 public class EventHallForm extends JDialog {
 
     private final EventHallService eventHallService;
-    private EventHall eventHall;
+    private final EventHall eventHall;
 
-    private JTextField nameField;
-    private JTextField capacityField;
-    private JTextField locationField;
-    private JComboBox<EventHall.HallStatus> statusDropdown;
-
-    private JButton saveButton;
-    private JButton cancelButton;
+    private final JTextField nameField;
+    private final JTextField capacityField;
+    private final JTextField locationField;
+    private final JComboBox<EventHall.HallStatus> statusDropdown;
 
     public EventHallForm(Frame owner, EventHallService eventHallService, EventHall eventHall) {
         super(owner, true);
@@ -66,8 +63,8 @@ public class EventHallForm extends JDialog {
         add(formPanel, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
-        saveButton = new JButton(eventHall == null ? "Create" : "Update");
-        cancelButton = new JButton("Cancel");
+        JButton saveButton = new JButton(eventHall == null ? "Create" : "Update");
+        JButton cancelButton = new JButton("Cancel");
 
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
@@ -98,7 +95,6 @@ public class EventHallForm extends JDialog {
 
         try {
             if (eventHall == null) {
-                // Create new user
                 EventHall newHall = new EventHall();
                 newHall.setHallName(name);
                 newHall.setCapacity(Integer.valueOf(capacity));
@@ -107,7 +103,6 @@ public class EventHallForm extends JDialog {
                 eventHallService.createEventHall(newHall);
                 JOptionPane.showMessageDialog(this, "Event Hall added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                // Update existing user
                 eventHall.setHallName(name);
                 eventHall.setCapacity(Integer.valueOf(capacity));
                 eventHall.setLocation(location);
@@ -120,4 +115,5 @@ public class EventHallForm extends JDialog {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 }

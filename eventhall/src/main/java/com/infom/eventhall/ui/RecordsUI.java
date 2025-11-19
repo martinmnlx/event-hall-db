@@ -24,15 +24,8 @@ public class RecordsUI extends JPanel {
     private final DefaultTableModel model;
     private final JTable table;
 
-    private final JLabel mainLabel;
-    private final JLabel recordsLabel;
     private final JLabel rowsLabel;
     private final JComboBox<String> recordsDropdown;
-
-    private final JButton createButton;
-    private final JButton updateButton;
-    private final JButton deleteButton;
-    private final JButton logoutButton;
 
     private String currentRecord;
 
@@ -47,12 +40,10 @@ public class RecordsUI extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        mainLabel = app.createLabel("View Records Tables", Color.BLUE, 60f, 3);
+        JLabel mainLabel = app.createLabel("View Records Tables", Color.BLUE, 60f, 3);
 
-        recordsLabel = app.createLabel("Record: ", Color.BLACK, 20f, 2);
-        recordsDropdown = new JComboBox<>(new String[]{
-                "Reservations", "Users", "Staff", "Event Halls", "Equipment", "Equipment Allocations"
-        });
+        JLabel recordsLabel = app.createLabel("Record: ", Color.BLACK, 20f, 2);
+        recordsDropdown = new JComboBox<>(new String[]{"Reservations", "Users", "Staff", "Event Halls", "Equipment", "Equipment Allocations"});
         recordsDropdown.setFont(app.getRegularFont().deriveFont(16f));
         recordsDropdown.setBackground(Color.WHITE);
         recordsDropdown.setMaximumSize(new Dimension(200, 60));
@@ -95,13 +86,11 @@ public class RecordsUI extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 40, 0, 40));
 
-        // Buttons
-        createButton = app.createButton("Create", Color.BLUE, 20f, false);
-        updateButton = app.createButton("Update", Color.BLUE, 20f, false);
-        deleteButton = app.createButton("Delete", Color.BLUE, 20f, false);
-        logoutButton = app.createButton("Return to Dashboard", Color.BLUE, 20f, false);
+        JButton createButton = app.createButton("Create", Color.BLUE, 20f, false);
+        JButton updateButton = app.createButton("Update", Color.BLUE, 20f, false);
+        JButton deleteButton = app.createButton("Delete", Color.BLUE, 20f, false);
+        JButton logoutButton = app.createButton("Return to Dashboard", Color.BLUE, 20f, false);
 
-        // Assign single listeners
         createButton.addActionListener(e -> openCreateForm());
         updateButton.addActionListener(e -> openUpdateForm());
         deleteButton.addActionListener(e -> deleteSelectedRecord());
@@ -131,6 +120,19 @@ public class RecordsUI extends JPanel {
         refresh();
     }
 
+    public void refresh() {
+        switch (currentRecord) {
+            case "Users" -> showUsersTable();
+            case "Staff" -> showStaffTable();
+            case "Event Halls" -> showEventHallsTable();
+            case "Equipment" -> showEquipmentTable();
+            case "Reservations" -> showReservationsTable();
+            case "Equipment Allocations" -> showEquipmentAllocationsTable();
+        }
+
+        rowsLabel.setText(String.valueOf(table.getRowCount()) + " Rows");
+    }
+
     private void openCreateForm() {
         switch (currentRecord) {
             case "Users" -> new UserForm(app, userService, null).setVisible(true);
@@ -140,6 +142,7 @@ public class RecordsUI extends JPanel {
             case "Reservations" -> new ReservationForm(app, reservationService, null, eventHallService, userService, staffService).setVisible(true);
             case "Equipment Allocations" -> new EquipmentAllocationForm(app, equipmentAllocationService, null, reservationService, equipmentService, eventHallService).setVisible(true);
         }
+
         refresh();
     }
 
@@ -176,6 +179,7 @@ public class RecordsUI extends JPanel {
                 new EquipmentAllocationForm(app, equipmentAllocationService, equipmentAllocationService.getAllocationById(allocId), reservationService, equipmentService, eventHallService).setVisible(true);
             }
         }
+
         refresh();
     }
 
@@ -206,21 +210,6 @@ public class RecordsUI extends JPanel {
         }
     }
 
-    // -------------------- REFRESH TABLE --------------------
-    public void refresh() {
-        switch (currentRecord) {
-            case "Users" -> showUsersTable();
-            case "Staff" -> showStaffTable();
-            case "Event Halls" -> showEventHallsTable();
-            case "Equipment" -> showEquipmentTable();
-            case "Reservations" -> showReservationsTable();
-            case "Equipment Allocations" -> showEquipmentAllocationsTable();
-        }
-
-        rowsLabel.setText(String.valueOf(table.getRowCount()) + " Rows");
-    }
-
-    // -------------------- TABLE DATA --------------------
     private void showUsersTable() {
         model.setRowCount(0);
         model.setColumnCount(0);
@@ -427,4 +416,5 @@ public class RecordsUI extends JPanel {
             });
         }
     }
+
 }

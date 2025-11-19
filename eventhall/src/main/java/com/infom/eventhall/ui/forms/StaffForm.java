@@ -9,14 +9,11 @@ import java.awt.*;
 public class StaffForm extends JDialog {
 
     private final StaffService staffService;
-    private Staff staff;
+    private final Staff staff;
 
-    private JTextField nameField;
-    private JTextField phoneField;
-    private JTextField roleField;
-
-    private JButton saveButton;
-    private JButton cancelButton;
+    private final JTextField nameField;
+    private final JTextField phoneField;
+    private final JTextField roleField;
 
     public StaffForm(Frame owner, StaffService staffService, Staff staff) {
         super(owner, true);
@@ -60,24 +57,21 @@ public class StaffForm extends JDialog {
 
         add(formPanel, BorderLayout.CENTER);
 
-        // Buttons
         JPanel buttonPanel = new JPanel();
-        saveButton = new JButton(staff == null ? "Create" : "Update");
-        cancelButton = new JButton("Cancel");
+        JButton saveButton = new JButton(staff == null ? "Create" : "Update");
+        JButton cancelButton = new JButton("Cancel");
 
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Populate fields if editing
         if (staff != null) {
             nameField.setText(staff.getName());
             phoneField.setText(staff.getPhoneNumber());
             roleField.setText(staff.getRole());
         }
 
-        // Button actions
         saveButton.addActionListener(e -> saveStaff());
         cancelButton.addActionListener(e -> dispose());
     }
@@ -94,7 +88,6 @@ public class StaffForm extends JDialog {
 
         try {
             if (staff == null) {
-                // Create new staff
                 Staff newStaff = new Staff();
                 newStaff.setName(name);
                 newStaff.setPhoneNumber(phone);
@@ -102,7 +95,6 @@ public class StaffForm extends JDialog {
                 staffService.addStaff(newStaff);
                 JOptionPane.showMessageDialog(this, "Staff added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                // Update existing staff
                 staff.setName(name);
                 staff.setPhoneNumber(phone);
                 staff.setRole(role);
@@ -114,4 +106,5 @@ public class StaffForm extends JDialog {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 }

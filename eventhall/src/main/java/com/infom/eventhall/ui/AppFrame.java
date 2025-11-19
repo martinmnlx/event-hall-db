@@ -1,14 +1,14 @@
 package com.infom.eventhall.ui;
 
+import com.infom.eventhall.DatabaseManager;
+import com.infom.eventhall.model.User;
+import com.infom.eventhall.service.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-import com.infom.eventhall.DatabaseManager;
-import com.infom.eventhall.model.User;
-
-import com.infom.eventhall.service.*;
 import lombok.Data;
 
 @Data
@@ -18,8 +18,10 @@ public class AppFrame extends JFrame {
     // Logged-In User
     private User user;
 
+    // Database Manager
     private final DatabaseManager db;
 
+    // UI Components and Fonts
     private final CardLayout cardLayout;
     private final JPanel mainPanel;
     private Font thinFont, regularFont, boldFont;

@@ -2,7 +2,6 @@ package com.infom.eventhall.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
@@ -26,8 +25,6 @@ public class BookingsUI extends JPanel {
     private final JComboBox<String> statusDropdown;
     private final JComboBox<String> sortDropdown;
     private final JLabel numResults;
-
-    private List<Reservation> reservations;
 
     @Getter
     private int chosenHallID = 0;
@@ -75,7 +72,6 @@ public class BookingsUI extends JPanel {
         filterPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         filterPanel.add(numResults = app.createLabel("0 Results", Color.BLUE, 16f, 3));
 
-        // --- Halls panel inside scroll pane ---
         bookingsPanel = new JPanel();
         bookingsPanel.setLayout(new BoxLayout(bookingsPanel, BoxLayout.Y_AXIS));
 
@@ -105,8 +101,8 @@ public class BookingsUI extends JPanel {
         refresh();
     }
 
-    // Refresh hall cards dynamically
     public void refresh() {
+        List<Reservation> reservations;
         if (app.getUser() != null) reservations = reservationService.getReservationByUserId(app.getUser().getUserId());
         else return;
 

@@ -29,31 +29,19 @@ public class ReserveUI extends JPanel {
     private final ReservationService reservationService;
     private final EventHallService eventHallService;
 
-    private int hallID;
     private EventHall hall;
 
-    private final JLabel titleLabel;
-    private final JLabel hallLabel;
-    private final JLabel locationLabel;
-    private final JLabel typeLabel;
-    private final JLabel guestLabel;
-    private final JLabel dateLabel;
-    private final JLabel equipmentLabel;
     private final JTextField hallField;
     private final JTextField locationField;
     private final JComboBox<String> typeDropdown;
     private final JSpinner guestSpinner;
-    private final JButton confirmButton;
-    private final JButton cancelButton;
 
-    private ArrayList<JCheckBox> boxes;
     private final JCheckBox fogMachine;
     private final JCheckBox laserLights;
     private final JCheckBox karaoke;
     private final JCheckBox photoBooth;
 
     private final UtilDateModel model;
-    private final JDatePanelImpl datePanel;
     private final JDatePickerImpl datePicker;
 
     public ReserveUI(AppFrame app, ReservationService r, EventHallService h) {
@@ -69,7 +57,7 @@ public class ReserveUI extends JPanel {
         p.put("text.month", "Month");
         p.put("text.year", "Year");
 
-        datePanel = new JDatePanelImpl(model, p);
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         datePicker = new JDatePickerImpl(datePanel, new JFormattedTextField.AbstractFormatter() {
             SimpleDateFormat df = new SimpleDateFormat("MMMM d, yyyy");
             @Override
@@ -107,25 +95,25 @@ public class ReserveUI extends JPanel {
         card.setMaximumSize(new Dimension(350, 600));
         card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        titleLabel = app.createLabel("Book a Reservation", Color.BLUE, 60f, 3);
+        JLabel titleLabel = app.createLabel("Book a Reservation", Color.BLUE, 60f, 3);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        hallLabel = app.createLabel("Event Hall", Color.BLACK, 20f, 2);
+        JLabel hallLabel = app.createLabel("Event Hall", Color.BLACK, 20f, 2);
         hallLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        locationLabel = app.createLabel("Location", Color.BLACK, 20f, 2);
+        JLabel locationLabel = app.createLabel("Location", Color.BLACK, 20f, 2);
         locationLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        typeLabel = app.createLabel("Select Event Type", Color.BLACK, 20f, 2);
+        JLabel typeLabel = app.createLabel("Select Event Type", Color.BLACK, 20f, 2);
         typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        guestLabel = app.createLabel("Enter Guest Count", Color.BLACK, 20f, 2);
+        JLabel guestLabel = app.createLabel("Enter Guest Count", Color.BLACK, 20f, 2);
         guestLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        dateLabel = app.createLabel("Select Event Date", Color.BLACK, 20f, 2);
+        JLabel dateLabel = app.createLabel("Select Event Date", Color.BLACK, 20f, 2);
         dateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        equipmentLabel = app.createLabel("Select Special Equipment", Color.BLACK, 20f, 2);
+        JLabel equipmentLabel = app.createLabel("Select Special Equipment", Color.BLACK, 20f, 2);
         equipmentLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         hallField = new JTextField();
@@ -197,7 +185,7 @@ public class ReserveUI extends JPanel {
         checkBoxPanel.add(karaoke = createCheckBox("Karaoke System"));
         checkBoxPanel.add(photoBooth = createCheckBox("Photo Booth"));
 
-        boxes = new ArrayList<>();
+        ArrayList<JCheckBox> boxes = new ArrayList<>();
         boxes.add(fogMachine);
         boxes.add(laserLights);
         boxes.add(karaoke);
@@ -205,10 +193,10 @@ public class ReserveUI extends JPanel {
 
         equipmentPanel.add(checkBoxPanel);
 
-        confirmButton = app.createButton("Confirm Booking", Color.BLUE, 20f, true);
+        JButton confirmButton = app.createButton("Confirm Booking", Color.BLUE, 20f, true);
         confirmButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        cancelButton = app.createButton("Cancel", Color.decode("#F94449"), 20f, true);
+        JButton cancelButton = app.createButton("Cancel", Color.decode("#F94449"), 20f, true);
         cancelButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel buttonPanel = new JPanel();
@@ -258,7 +246,7 @@ public class ReserveUI extends JPanel {
     }
 
     public void refresh() {
-        hallID = app.getHallsUI().getChosenHallID();
+        int hallID = app.getHallsUI().getChosenHallID();
         hall = eventHallService.getHallById(hallID);
 
         hallField.setText(hall.getHallName());
@@ -334,4 +322,5 @@ public class ReserveUI extends JPanel {
     public void setBookingDate(Date date) {
         model.setValue(date);
     }
+
 }

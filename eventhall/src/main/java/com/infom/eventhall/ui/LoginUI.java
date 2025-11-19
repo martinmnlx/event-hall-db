@@ -2,6 +2,7 @@ package com.infom.eventhall.ui;
 
 import com.infom.eventhall.model.User;
 import com.infom.eventhall.service.UserService;
+
 import lombok.Getter;
 
 import javax.swing.*;
@@ -12,15 +13,11 @@ public class LoginUI extends JPanel {
     private final AppFrame app;
     private final UserService userService;
 
-    private final JLabel titleLabel;
-    private final JLabel emailLabel;
-    private final JLabel passwordLabel;
     private final JTextField emailField;
     private final JPasswordField passwordField;
-    private final JButton loginButton;
-    private final JButton registerButton;
+
     @Getter
-    private JLabel warningLabel;
+    private final JLabel warningLabel;
 
     public LoginUI(AppFrame app, UserService userService) {
         this.app = app;
@@ -37,13 +34,13 @@ public class LoginUI extends JPanel {
         card.setMaximumSize(new Dimension(350, 600));
         card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        titleLabel = app.createLabel("EventBuddy", Color.BLUE, 80f, 3);
+        JLabel titleLabel = app.createLabel("EventBuddy", Color.BLUE, 80f, 3);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        emailLabel = app.createLabel("Email", Color.BLACK, 20f, 2);
+        JLabel emailLabel = app.createLabel("Email", Color.BLACK, 20f, 2);
         emailLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        passwordLabel = app.createLabel("Password", Color.BLACK, 20f, 2);
+        JLabel passwordLabel = app.createLabel("Password", Color.BLACK, 20f, 2);
         passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         warningLabel = app.createLabel(" ", Color.RED, 16f, 2);
@@ -53,9 +50,9 @@ public class LoginUI extends JPanel {
 
         passwordField = app.createPasswordField();
 
-        loginButton = app.createButton("Login", Color.BLUE, 20f, true);
+        JButton loginButton = app.createButton("Login", Color.BLUE, 20f, true);
 
-        registerButton = app.createButton("Sign Up", Color.WHITE, 20f, true);
+        JButton registerButton = app.createButton("Sign Up", Color.WHITE, 20f, true);
         registerButton.setForeground(Color.BLUE);
         registerButton.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.BLUE, 1),

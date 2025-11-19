@@ -9,16 +9,13 @@ import java.awt.*;
 public class UserForm extends JDialog {
 
     private final UserService userService;
-    private User user;
+    private final User user;
 
-    private JComboBox<User.UserType> typeDropdown;
-    private JTextField nameField;
-    private JTextField emailField;
-    private JTextField phoneField;
-    private JTextField passwordField;
-
-    private JButton saveButton;
-    private JButton cancelButton;
+    private final JComboBox<User.UserType> typeDropdown;
+    private final JTextField nameField;
+    private final JTextField emailField;
+    private final JTextField phoneField;
+    private final JTextField passwordField;
 
     public UserForm(Frame owner, UserService userService, User user) {
         super(owner, true);
@@ -74,8 +71,8 @@ public class UserForm extends JDialog {
         add(formPanel, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
-        saveButton = new JButton(user == null ? "Create" : "Update");
-        cancelButton = new JButton("Cancel");
+        JButton saveButton = new JButton(user == null ? "Create" : "Update");
+        JButton cancelButton = new JButton("Cancel");
 
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
@@ -107,7 +104,6 @@ public class UserForm extends JDialog {
             return;
         }
 
-        // Check if email is already used by another user
         User existingUser = userService.getUserByEmail(email);
         if (existingUser != null && (user == null || existingUser.getUserId() != user.getUserId())) {
             JOptionPane.showMessageDialog(this, "Email is already in use by another user!", "Error", JOptionPane.WARNING_MESSAGE);
@@ -116,7 +112,6 @@ public class UserForm extends JDialog {
 
         try {
             if (user == null) {
-                // Create new user
                 User newUser = new User();
                 newUser.setType(type);
                 newUser.setName(name);
@@ -126,7 +121,6 @@ public class UserForm extends JDialog {
                 userService.createUser(newUser);
                 JOptionPane.showMessageDialog(this, "User added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                // Update existing user
                 user.setType(type);
                 user.setName(name);
                 user.setEmail(email);
@@ -140,4 +134,5 @@ public class UserForm extends JDialog {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 }

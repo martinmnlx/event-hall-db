@@ -7,45 +7,39 @@ public class AdminUI extends JPanel {
 
     private final AppFrame app;
 
-    private final JLabel titleLabel;
-    private final JLabel welcomeLabel;
     private final JLabel nameLabel;
-    private final JLabel exclamLabel;
-    private final JButton recordsButton;
-    private final JButton reportsButton;
-    private final JButton logoutButton;
 
     public AdminUI(AppFrame app) {
         this.app = app;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        titleLabel = app.createLabel("Admin Dashboard", Color.BLUE, 80f, 3);
+        JLabel titleLabel = app.createLabel("Admin Dashboard", Color.BLUE, 80f, 3);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel welcomeLayout = new JPanel();
         welcomeLayout.setLayout(new BoxLayout(welcomeLayout, BoxLayout.X_AXIS));
 
-        welcomeLabel = app.createLabel("Welcome, ", Color.BLACK, 20f, 2);
+        JLabel welcomeLabel = app.createLabel("Welcome, ", Color.BLACK, 20f, 2);
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         nameLabel = app.createLabel("(NO USER)", Color.BLACK, 20f, 3);
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        exclamLabel = app.createLabel("!", Color.BLACK, 20f, 2);
+        JLabel exclamLabel = app.createLabel("!", Color.BLACK, 20f, 2);
         exclamLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         welcomeLayout.add(welcomeLabel);
         welcomeLayout.add(nameLabel);
         welcomeLayout.add(exclamLabel);
 
-        recordsButton = app.createButton("View Records Tables", Color.BLUE, 24f, false);
+        JButton recordsButton = app.createButton("View Records Tables", Color.BLUE, 24f, false);
         recordsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        reportsButton = app.createButton("View Generated Reports", Color.BLUE, 24f, false);
+        JButton reportsButton = app.createButton("View Generated Reports", Color.BLUE, 24f, false);
         reportsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        logoutButton = app.createButton("Logout", Color.decode("#F94449"), 24f, false);
+        JButton logoutButton = app.createButton("Logout", Color.decode("#F94449"), 24f, false);
         logoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         add(Box.createVerticalGlue());

@@ -53,7 +53,7 @@ CREATE TABLE Equipment (
     equipment_id INT AUTO_INCREMENT PRIMARY KEY,
     equipment_name VARCHAR(100) NOT NULL,
     quantity_total INT NOT NULL,
-    status ENUM('Available', 'In Use', 'Maintenance') DEFAULT 'Available'
+    status ENUM('Available', 'InUse', 'Maintenance') DEFAULT 'Available'
 ) AUTO_INCREMENT = 101;
 
 -- ===============================
